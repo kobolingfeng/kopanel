@@ -292,9 +292,10 @@
   <div class="container">
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-badge">v0.9.76</div>
+      <div class="hero-badge">...</div>
       <h1 class="hero-title" data-i18n="title">KO掌机助手</h1>
       <p class="hero-subtitle" data-i18n="subtitle">专为 Windows 掌机打造。<br>极致轻量，全手柄操作，完全免费。</p>
+      <div id="install-count" style="margin-top: 16px; font-size: 14px; color: var(--text-secondary); opacity: 0; transition: opacity 0.5s;"></div>
     </section>
 
     <!-- Downloads -->
@@ -509,6 +510,13 @@
         var key = el.getAttribute('data-i18n');
         if (texts[key]) el.innerHTML = texts[key];
       });
+      // 更新装机量文本
+      if (window._installCount) {
+        var el = document.getElementById('install-count');
+        var prefix = lang === 'en' ? 'Trusted by ' : '已有 ';
+        var suffix = lang === 'en' ? ' devices worldwide' : ' 台设备在使用';
+        el.textContent = prefix + window._installCount.toLocaleString() + suffix;
+      }
     }
 
     // Auto-detect language
@@ -551,6 +559,22 @@
         }
       })
       .catch(() => { });
+
+    // 获取装机量统计
+    fetch('https://kopanel-telemetry.kobolingfeng.workers.dev/stats')
+      .then(r => r.json())
+      .then(stats => {
+        if (stats.total_devices > 0) {
+          var el = document.getElementById('install-count');
+          var prefix = currentLang === 'en' ? 'Trusted by ' : '已有 ';
+          var suffix = currentLang === 'en' ? ' devices worldwide' : ' 台设备在使用';
+          el.textContent = prefix + stats.total_devices.toLocaleString() + suffix;
+          el.style.opacity = '1';
+          // 保存到全局以便语言切换时更新
+          window._installCount = stats.total_devices;
+        }
+      })
+      .catch(() => {});
   </script>
 </body>
 
