@@ -39,6 +39,41 @@
       padding: 0 20px;
     }
 
+    /* Language Switch */
+    .lang-switch {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      background: rgba(28, 28, 30, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .lang-btn:hover {
+      color: var(--text);
+    }
+
+    .lang-btn.active {
+      color: #fff;
+      background: var(--accent);
+    }
+
     /* Hero Section */
     .hero {
       text-align: center;
@@ -248,6 +283,12 @@
 </head>
 
 <body>
+  <!-- Language Switch -->
+  <div class="lang-switch">
+    <button class="lang-btn active" id="btn-zh" onclick="switchLang('zh')">中文</button>
+    <button class="lang-btn" id="btn-en" onclick="switchLang('en')">EN</button>
+  </div>
+
   <div class="container">
     <!-- Hero -->
     <section class="hero">
@@ -308,7 +349,7 @@
         <h3 class="card-title" style="color: var(--text-secondary);" data-i18n="widget-guide-title">安装说明</h3>
         <p class="card-desc" data-i18n="widget-guide">
           1. 下载并解压 zip 文件<br>
-          2. <b>右键以管理员身份运行</b>“安装证书.bat”<br>
+          2. <b>右键以管理员身份运行</b>"安装证书.bat"<br>
           3. 双击 KoPanelWidget.msix 安装<br>
           4. 启动 KoPanel，Win+G → 小组件 → KoPanel
         </p>
@@ -378,18 +419,50 @@
     <!-- Footer -->
     <footer class="footer">
       <div style="margin-bottom: 10px;">
-        <a href="https://github.com/koboling/gpd-control-panel" target="_blank">GitHub</a>
+        <a href="https://github.com/kobolingfeng/kopanel" target="_blank">GitHub</a>
         <span style="color: var(--border)">|</span>
-        <a href="https://discord.gg/vwWUHjCXRF" target="_blank">Discord</a>
+        <a href="https://discord.gg/AwbN9kh44S" target="_blank">Discord</a>
         <span style="color: var(--border)">|</span>
-        <a href="https://github.com/koboling/gpd-control-panel/issues" target="_blank" data-i18n="feedback">问题反馈</a>
+        <a href="https://github.com/kobolingfeng/kopanel/issues" target="_blank" data-i18n="feedback">问题反馈</a>
+        <span style="color: var(--border)">|</span>
+        <a href="#" onclick="return false;" style="cursor: default;" data-i18n="qq-group">QQ 群: 178193167</a>
       </div>
-      <p>Copyright © 2023-2025 koboling. Open source under MIT License.</p>
+      <p>Copyright © 2023-2026 kobolingfeng. Open source under MIT License.</p>
     </footer>
   </div>
   <script>
-    // i18n - default English, Chinese for Chinese systems
     var i18n = {
+      zh: {
+        'title': 'KO掌机助手',
+        'subtitle': '专为 Windows 掌机打造。<br>极致轻量，全手柄操作，完全免费。',
+        'setup-title': '安装版',
+        'setup-desc': '标准 Windows 安装程序，自动配置环境。推荐大多数用户使用。',
+        'setup-btn': '下载安装版',
+        'portable-title': '绿色版',
+        'portable-desc': '解压即用，无需安装。适合遇到安装问题或偏好便携使用的用户。',
+        'portable-btn': '下载绿色版',
+        'widget-title': 'Xbox Game Bar 组件',
+        'widget-name': 'KoPanel Widget',
+        'widget-desc': '游戏内 Win+G 快速调节 TDP/风扇，支持手柄导航。需先安装证书。',
+        'widget-btn': '下载 Widget',
+        'widget-guide-title': '安装说明',
+        'widget-guide': '1. 下载并解压 zip 文件<br>2. <b>右键以管理员身份运行</b>"安装证书.bat"<br>3. 双击 KoPanelWidget.msix 安装<br>4. 启动 KoPanel，Win+G → 小组件 → KoPanel',
+        'features-title': '强大功能，尽在掌控。',
+        'f1-name': '性能调节',
+        'f1-text': 'TDP、CPU 频率、GPU 时钟精准控制，发挥硬件最大潜能。',
+        'f2-name': '风扇控制',
+        'f2-text': '支持自定义风扇曲线，在静音与散热之间找到完美平衡。',
+        'f3-name': '显示设置',
+        'f3-text': '快速切换分辨率和刷新率，适配不同游戏需求。',
+        'f4-name': '手柄映射',
+        'f4-text': '陀螺仪映射为右摇杆，实现高精度体感瞄准体验。',
+        'f5-name': '系统优化',
+        'f5-text': '一键禁用遥测、优化服务，为游戏腾出更多资源。',
+        'f6-name': '游戏管理',
+        'f6-text': '自动扫描 Steam 库，支持手动添加，自动应用配置。',
+        'feedback': '问题反馈',
+        'qq-group': 'QQ 群: 178193167'
+      },
       en: {
         'title': 'KO Panel',
         'subtitle': 'Built for Windows handhelds.<br>Lightweight, full gamepad control, completely free.',
@@ -418,18 +491,32 @@
         'f5-text': 'One-click disable telemetry and optimize services for more gaming resources.',
         'f6-name': 'Game Management',
         'f6-text': 'Auto-scan Steam library, manual additions, auto-apply per-game profiles.',
-        'feedback': 'Feedback'
+        'feedback': 'Feedback',
+        'qq-group': 'QQ Group: 178193167'
       }
     };
-    (function () {
-      var lang = (navigator.language || '').toLowerCase();
-      if (lang.startsWith('zh')) return;
-      document.title = 'KO Panel - Ultimate Performance';
-      document.documentElement.lang = 'en';
+
+    var currentLang = 'zh';
+
+    function switchLang(lang) {
+      currentLang = lang;
+      document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      document.title = lang === 'zh' ? 'KO掌机助手 - 极致性能体验' : 'KO Panel - Ultimate Performance';
+      var texts = i18n[lang];
       document.querySelectorAll('[data-i18n]').forEach(function (el) {
         var key = el.getAttribute('data-i18n');
-        if (i18n.en[key]) el.innerHTML = i18n.en[key];
+        if (texts[key]) el.innerHTML = texts[key];
       });
+    }
+
+    // Auto-detect language
+    (function () {
+      var lang = (navigator.language || '').toLowerCase();
+      if (!lang.startsWith('zh')) {
+        switchLang('en');
+      }
     })();
 
     // 从对象存储获取最新版本信息
@@ -459,7 +546,8 @@
           document.getElementById('widget-version').textContent = 'v' + info.widget_version;
         }
         if (info.widget_cert_url) {
-          document.getElementById('btn-cert').href = info.widget_cert_url;
+          var btnCert = document.getElementById('btn-cert');
+          if (btnCert) btnCert.href = info.widget_cert_url;
         }
       })
       .catch(() => { });
