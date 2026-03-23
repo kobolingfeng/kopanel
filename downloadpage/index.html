@@ -8,7 +8,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23080808' stroke='%23444' stroke-width='2'/><path d='M30 50h40M50 30v40' stroke='%23fff' stroke-width='7' stroke-linecap='round'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     :root{
@@ -16,176 +16,92 @@
       --fg:#e8e8e8;--fg-dim:#777;--fg-faint:#444;
       --accent:#9ba1f5;--accent-dim:rgba(155,161,245,0.15);
       --mono:'JetBrains Mono',monospace;
-      --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-      --serif:'Playfair Display',Georgia,serif;
+      --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       --ease:cubic-bezier(0.16,1,0.3,1);
     }
     html{scroll-behavior:smooth}
-    body{
-      font-family:var(--sans);background:var(--bg);color:var(--fg);
-      line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;
-    }
+    body{font-family:var(--sans);background:var(--bg);color:var(--fg);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-    .page{max-width:840px;margin:0 auto;padding:0 32px}
+    /* Particle canvas */
+    #particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-    /* ---- Language ---- */
-    .lang-switch{
-      position:fixed;top:24px;right:28px;z-index:100;display:flex;gap:1px;
-      border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;
-      background:rgba(8,8,8,0.9);backdrop-filter:blur(8px);
-    }
-    .lang-btn{
-      padding:5px 12px;font:500 11px/1 var(--mono);letter-spacing:0.06em;
-      color:var(--fg-dim);background:transparent;border:none;cursor:pointer;
-      transition:all 0.2s;
-    }
+    .page{position:relative;z-index:1;max-width:840px;margin:0 auto;padding:0 32px}
+
+    /* Lang */
+    .lang-switch{position:fixed;top:24px;right:28px;z-index:100;display:flex;gap:1px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:rgba(8,8,8,0.85);backdrop-filter:blur(8px)}
+    .lang-btn{padding:5px 12px;font:500 11px/1 var(--mono);letter-spacing:0.06em;color:var(--fg-dim);background:transparent;border:none;cursor:pointer;transition:all 0.2s}
     .lang-btn:hover{color:var(--fg)}
     .lang-btn.active{color:var(--bg);background:var(--fg)}
 
-    /* ============ HERO ============ */
+    /* Hero */
     .hero{text-align:center;padding:140px 0 48px}
-
     .hero-ver{
-      font-family:var(--mono);font-size:11px;font-weight:500;
-      letter-spacing:0.18em;text-transform:uppercase;color:var(--fg-faint);
-      margin-bottom:32px;
-      opacity:0;animation:fadeIn 0.6s 0.3s var(--ease) forwards;
-    }
-
-    .hero-title{
-      font-size:clamp(52px,9vw,88px);font-weight:900;
-      line-height:0.95;letter-spacing:-0.05em;
+      font-family:var(--mono);font-size:15px;font-weight:600;
+      letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);
       margin-bottom:28px;
+      opacity:0;animation:fadeIn 0.6s 0.3s var(--ease) forwards;
+      text-shadow:0 0 20px rgba(155,161,245,0.3);
+    }
+    .hero-title{
+      font-size:clamp(52px,9vw,88px);font-weight:900;line-height:0.95;letter-spacing:-0.05em;margin-bottom:28px;
       opacity:0;animation:fadeIn 0.6s 0.1s var(--ease) forwards;
     }
-    /* gradient fill on title */
-    .hero-title span{
-      background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,0.45) 100%);
-      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    }
-
-    .hero-sub{
-      font-size:clamp(16px,2.2vw,19px);font-weight:400;
-      color:var(--fg-dim);max-width:440px;margin:0 auto 20px;line-height:1.65;
-      opacity:0;animation:fadeIn 0.6s 0.5s var(--ease) forwards;
-    }
-
-    .hero-stats{
-      font-family:var(--mono);font-size:13px;color:var(--fg-faint);
-      letter-spacing:0.04em;
-      opacity:0;transition:opacity 0.6s var(--ease);
-    }
-
-    .hero-analytics{
-      display:inline-flex;align-items:center;gap:6px;
-      margin-top:12px;
-      font-family:var(--mono);font-size:12px;font-weight:500;
-      color:var(--accent);text-decoration:none;
-      letter-spacing:0.05em;
-      opacity:0;transition:opacity 0.6s var(--ease);
-    }
+    .hero-title span{background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,0.45) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-sub{font-size:clamp(16px,2.2vw,19px);font-weight:400;color:var(--fg-dim);max-width:440px;margin:0 auto 20px;line-height:1.65;opacity:0;animation:fadeIn 0.6s 0.5s var(--ease) forwards}
+    .hero-stats{font-family:var(--mono);font-size:13px;color:var(--fg-faint);letter-spacing:0.04em;opacity:0;transition:opacity 0.6s var(--ease)}
+    .hero-analytics{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;letter-spacing:0.05em;opacity:0;transition:opacity 0.6s var(--ease)}
     .hero-analytics:hover{text-decoration:underline}
     .hero-analytics svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
 
-    /* ============ DIVIDER ============ */
-    .rule{
-      width:32px;height:1px;background:var(--fg-faint);
-      margin:56px auto;opacity:0.4;
-    }
+    .rule{width:32px;height:1px;background:var(--fg-faint);margin:56px auto;opacity:0.4}
 
-    /* ============ DOWNLOAD CARDS ============ */
-    .cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-bottom:72px;
-      border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;
-      opacity:0;animation:fadeUp 0.6s 0.7s var(--ease) forwards;
-    }
-    .card{
-      padding:40px 36px;background:rgba(255,255,255,0.025);
-      text-decoration:none;color:inherit;
-      transition:background 0.25s;position:relative;
-    }
+    /* Cards */
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-bottom:72px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;opacity:0;animation:fadeUp 0.6s 0.7s var(--ease) forwards}
+    .card{padding:40px 36px;background:rgba(255,255,255,0.025);text-decoration:none;color:inherit;transition:background 0.25s;position:relative}
     .card:hover{background:rgba(255,255,255,0.045)}
-    .card-label{
-      font-family:var(--mono);font-size:10px;font-weight:600;
-      letter-spacing:0.14em;text-transform:uppercase;
-      color:var(--fg-faint);margin-bottom:14px;
-    }
+    .card-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-faint);margin-bottom:14px}
     .card-title{font-size:22px;font-weight:700;letter-spacing:-0.03em;margin-bottom:8px}
     .card-desc{font-size:13px;color:var(--fg-dim);line-height:1.55;margin-bottom:28px}
-    .card-btn{
-      display:inline-block;padding:9px 18px;border-radius:6px;
-      font-size:12px;font-weight:600;letter-spacing:0.02em;
-      background:var(--fg);color:var(--bg);
-      transition:opacity 0.2s;
-    }
+    .card-btn{display:inline-block;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:600;letter-spacing:0.02em;background:var(--fg);color:var(--bg);transition:opacity 0.2s}
     .card-btn:hover{opacity:0.85}
     .card-btn.accent{background:var(--accent);color:#111}
-    .card-size{
-      position:absolute;top:40px;right:36px;
-      font-family:var(--mono);font-size:11px;color:var(--fg-faint);
-    }
+    .card-size{position:absolute;top:40px;right:36px;font-family:var(--mono);font-size:11px;color:var(--fg-faint)}
 
-    /* ============ WIDGET ============ */
+    /* Widget */
     .widget-section{margin-bottom:72px;opacity:0;transform:translateY(12px);transition:all 0.6s var(--ease)}
     .widget-section.visible{opacity:1;transform:translateY(0)}
+    .section-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--fg-faint);margin-bottom:24px;text-align:center}
+    .widget-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden}
 
-    .section-label{
-      font-family:var(--mono);font-size:10px;font-weight:600;
-      letter-spacing:0.2em;text-transform:uppercase;
-      color:var(--fg-faint);margin-bottom:24px;text-align:center;
-    }
-
-    .widget-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;
-      border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden}
-
-    /* ============ FEATURES ============ */
+    /* Features */
     .feat-section{padding:0 0 80px;opacity:0;transform:translateY(12px);transition:all 0.6s var(--ease)}
     .feat-section.visible{opacity:1;transform:translateY(0)}
-
-    .feat-heading{
-      font-size:clamp(26px,4vw,36px);font-weight:700;
-      text-align:center;letter-spacing:-0.03em;margin-bottom:56px;
-      background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,0.5) 100%);
-      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    }
-
-    .feats{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
-      border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;
-    }
-    .feat{
-      padding:28px 24px;background:rgba(255,255,255,0.02);
-      transition:background 0.25s;
-    }
+    .feat-heading{font-size:clamp(26px,4vw,36px);font-weight:700;text-align:center;letter-spacing:-0.03em;margin-bottom:56px;background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,0.5) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .feats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden}
+    .feat{padding:28px 24px;background:rgba(255,255,255,0.02);transition:background 0.25s}
     .feat:hover{background:rgba(255,255,255,0.04)}
     .feat-icon{color:var(--accent);margin-bottom:16px}
     .feat-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
     .feat-name{font-size:14px;font-weight:600;margin-bottom:5px;letter-spacing:-0.01em}
     .feat-text{font-size:12.5px;color:var(--fg-dim);line-height:1.55}
 
-    /* ============ FOOTER ============ */
+    /* Footer */
     .footer{border-top:1px solid rgba(255,255,255,0.06);padding:40px 0 56px;text-align:center}
     .footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-bottom:10px}
     .footer a{color:var(--fg-dim);text-decoration:none;font-size:12px;transition:color 0.2s}
     .footer a:hover{color:var(--fg)}
     .footer-copy{font-family:var(--mono);font-size:10px;color:var(--fg-faint);letter-spacing:0.04em}
 
-    /* ============ ANIMATIONS ============ */
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-    /* ============ RESPONSIVE ============ */
-    @media(max-width:640px){
-      .page{padding:0 20px}
-      .hero{padding:80px 0 32px}
-      .cards,.widget-grid,.feats{grid-template-columns:1fr}
-    }
-    @media(prefers-reduced-motion:reduce){
-      *{animation:none!important;transition:none!important}
-      .hero-title,.hero-ver,.hero-sub,.cards{opacity:1;transform:none}
-    }
+    @media(max-width:640px){.page{padding:0 20px}.hero{padding:80px 0 32px}.cards,.widget-grid,.feats{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.hero-title,.hero-ver,.hero-sub,.cards{opacity:1;transform:none}#particles{display:none}}
   </style>
 </head>
 <body>
+
+  <canvas id="particles"></canvas>
 
   <div class="lang-switch">
     <button class="lang-btn active" id="btn-zh" onclick="switchLang('zh')">中文</button>
@@ -193,7 +109,6 @@
   </div>
 
   <div class="page">
-
     <section class="hero">
       <div class="hero-ver hero-badge">...</div>
       <h1 class="hero-title"><span data-i18n="title">KO掌机助手</span></h1>
@@ -207,7 +122,6 @@
 
     <div class="rule"></div>
 
-    <!-- Downloads -->
     <div class="cards">
       <a href="#" class="card" id="card-setup">
         <div class="card-label">Installer</div>
@@ -225,7 +139,6 @@
       </a>
     </div>
 
-    <!-- Widget -->
     <section class="widget-section fade-in">
       <div class="section-label" data-i18n="widget-title">Xbox Game Bar 组件</div>
       <div class="widget-grid">
@@ -247,40 +160,15 @@
 
     <div class="rule"></div>
 
-    <!-- Features -->
     <section class="feat-section fade-in">
       <h2 class="feat-heading" data-i18n="features-title">强大功能，尽在掌控。</h2>
       <div class="feats">
-        <div class="feat">
-          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="feat-name" data-i18n="f1-name">性能调节</div>
-          <div class="feat-text" data-i18n="f1-text">TDP、CPU 频率、GPU 时钟精准控制，发挥硬件最大潜能。</div>
-        </div>
-        <div class="feat">
-          <div class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/></svg></div>
-          <div class="feat-name" data-i18n="f2-name">风扇控制</div>
-          <div class="feat-text" data-i18n="f2-text">支持自定义风扇曲线，在静音与散热之间找到完美平衡。</div>
-        </div>
-        <div class="feat">
-          <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21" stroke-linecap="round"/></svg></div>
-          <div class="feat-name" data-i18n="f3-name">显示设置</div>
-          <div class="feat-text" data-i18n="f3-text">快速切换分辨率和刷新率，适配不同游戏需求。</div>
-        </div>
-        <div class="feat">
-          <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4m-2-2v4" stroke-linecap="round"/><circle cx="17" cy="11" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/></svg></div>
-          <div class="feat-name" data-i18n="f4-name">手柄映射</div>
-          <div class="feat-text" data-i18n="f4-text">陀螺仪映射为右摇杆，实现高精度体感瞄准体验。</div>
-        </div>
-        <div class="feat">
-          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="feat-name" data-i18n="f5-name">系统优化</div>
-          <div class="feat-text" data-i18n="f5-text">一键禁用遥测、优化服务，为游戏腾出更多资源。</div>
-        </div>
-        <div class="feat">
-          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="feat-name" data-i18n="f6-name">游戏管理</div>
-          <div class="feat-text" data-i18n="f6-text">自动扫描 Steam 库，支持手动添加，自动应用配置。</div>
-        </div>
+        <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="feat-name" data-i18n="f1-name">性能调节</div><div class="feat-text" data-i18n="f1-text">TDP、CPU 频率、GPU 时钟精准控制，发挥硬件最大潜能。</div></div>
+        <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/></svg></div><div class="feat-name" data-i18n="f2-name">风扇控制</div><div class="feat-text" data-i18n="f2-text">支持自定义风扇曲线，在静音与散热之间找到完美平衡。</div></div>
+        <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21" stroke-linecap="round"/></svg></div><div class="feat-name" data-i18n="f3-name">显示设置</div><div class="feat-text" data-i18n="f3-text">快速切换分辨率和刷新率，适配不同游戏需求。</div></div>
+        <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4m-2-2v4" stroke-linecap="round"/><circle cx="17" cy="11" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/></svg></div><div class="feat-name" data-i18n="f4-name">手柄映射</div><div class="feat-text" data-i18n="f4-text">陀螺仪映射为右摇杆，实现高精度体感瞄准体验。</div></div>
+        <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="feat-name" data-i18n="f5-name">系统优化</div><div class="feat-text" data-i18n="f5-text">一键禁用遥测、优化服务，为游戏腾出更多资源。</div></div>
+        <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="feat-name" data-i18n="f6-name">游戏管理</div><div class="feat-text" data-i18n="f6-text">自动扫描 Steam 库，支持手动添加，自动应用配置。</div></div>
       </div>
     </section>
 
@@ -296,60 +184,69 @@
   </div>
 
   <script>
-    var i18n={
-      zh:{
-        'title':'KO掌机助手','subtitle':'专为 Windows 掌机打造。<br>极致轻量，全手柄操作，完全免费。',
-        'setup-title':'安装版','setup-desc':'标准 Windows 安装程序，自动配置环境。推荐大多数用户使用。','setup-btn':'下载安装版',
-        'portable-title':'绿色版','portable-desc':'解压即用，无需安装。适合遇到安装问题或偏好便携使用的用户。','portable-btn':'下载绿色版',
-        'widget-title':'Xbox Game Bar 组件','widget-name':'KoPanel Widget',
-        'widget-desc':'游戏内 Win+G 快速调节 TDP/风扇，支持手柄导航。需先安装证书。','widget-btn':'下载 Widget',
-        'widget-guide-title':'安装说明',
-        'widget-guide':'1. 下载并解压 zip 文件<br>2. <b>右键以管理员身份运行</b>"安装证书.bat"<br>3. 双击 KoPanelWidget.msix 安装<br>4. 启动 KoPanel，Win+G → 小组件 → KoPanel',
-        'features-title':'强大功能，尽在掌控。',
-        'f1-name':'性能调节','f1-text':'TDP、CPU 频率、GPU 时钟精准控制，发挥硬件最大潜能。',
-        'f2-name':'风扇控制','f2-text':'支持自定义风扇曲线，在静音与散热之间找到完美平衡。',
-        'f3-name':'显示设置','f3-text':'快速切换分辨率和刷新率，适配不同游戏需求。',
-        'f4-name':'手柄映射','f4-text':'陀螺仪映射为右摇杆，实现高精度体感瞄准体验。',
-        'f5-name':'系统优化','f5-text':'一键禁用遥测、优化服务，为游戏腾出更多资源。',
-        'f6-name':'游戏管理','f6-text':'自动扫描 Steam 库，支持手动添加，自动应用配置。',
-        'feedback':'问题反馈','stats-link':'查看数据统计 →','qq-group':'QQ 群: 178193167'
-      },
-      en:{
-        'title':'KO Panel','subtitle':'Built for Windows handhelds.<br>Lightweight, full gamepad control, completely free.',
-        'setup-title':'Installer','setup-desc':'Standard Windows installer with auto configuration. Recommended for most users.','setup-btn':'Download Installer',
-        'portable-title':'Portable','portable-desc':'Extract and run. For users with installation issues or who prefer portable apps.','portable-btn':'Download Portable',
-        'widget-title':'Xbox Game Bar Widget','widget-name':'KoPanel Widget',
-        'widget-desc':'Quick TDP/Fan control in-game via Win+G. Supports gamepad navigation. Install cert first.','widget-btn':'Download Widget',
-        'widget-guide-title':'Installation Guide',
-        'widget-guide':'1. Download and extract the zip file<br>2. <b>Right-click Run as Administrator</b> the install cert bat<br>3. Double-click KoPanelWidget.msix to install<br>4. Launch KoPanel, Win+G → Widgets → KoPanel',
-        'features-title':'Powerful features at your fingertips.',
-        'f1-name':'Performance Control','f1-text':'Precise TDP, CPU frequency, and GPU clock control.',
-        'f2-name':'Fan Control','f2-text':'Custom fan curves for the perfect balance between silence and cooling.',
-        'f3-name':'Display Settings','f3-text':'Quick resolution and refresh rate switching for different games.',
-        'f4-name':'Gamepad Mapping','f4-text':'Gyroscope to right stick mapping for high-precision motion aiming.',
-        'f5-name':'System Optimization','f5-text':'One-click disable telemetry and optimize services.',
-        'f6-name':'Game Management','f6-text':'Auto-scan Steam library, manual additions, auto-apply per-game profiles.',
-        'feedback':'Feedback','stats-link':'View Analytics →','qq-group':'QQ Group: 178193167'
+    // ===== Particle System =====
+    (function(){
+      var c=document.getElementById('particles'),ctx=c.getContext('2d');
+      var W,H,pts=[],N=80,linkDist=120,mouse={x:-999,y:-999};
+      function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+      window.addEventListener('resize',resize);resize();
+
+      for(var i=0;i<N;i++) pts.push({
+        x:Math.random()*W, y:Math.random()*H,
+        vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3,
+        r:Math.random()*2+1.5, o:Math.random()*0.35+0.15
+      });
+
+      document.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
+      document.addEventListener('mouseleave',function(){mouse.x=-999;mouse.y=-999});
+
+      function draw(){
+        ctx.clearRect(0,0,W,H);
+        // update & draw particles
+        for(var i=0;i<N;i++){
+          var p=pts[i];
+          p.x+=p.vx;p.y+=p.vy;
+          if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+          if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+
+          // mouse repel
+          var dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);
+          if(d<150&&d>0){var f=0.02*(150-d)/150;p.vx+=dx/d*f;p.vy+=dy/d*f}
+          // damping
+          p.vx*=0.999;p.vy*=0.999;
+
+          ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fillStyle='rgba(155,161,245,'+p.o+')';ctx.fill();
+        }
+        // draw lines
+        for(var i=0;i<N;i++){
+          for(var j=i+1;j<N;j++){
+            var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+            if(d<linkDist){
+              ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+              ctx.strokeStyle='rgba(155,161,245,'+(0.12*(1-d/linkDist))+')';
+              ctx.lineWidth=0.5;ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(draw);
       }
+      // respect reduced motion
+      if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches) draw();
+    })();
+
+    // ===== i18n =====
+    var i18n={
+      zh:{'title':'KO掌机助手','subtitle':'专为 Windows 掌机打造。<br>极致轻量，全手柄操作，完全免费。','setup-title':'安装版','setup-desc':'标准 Windows 安装程序，自动配置环境。推荐大多数用户使用。','setup-btn':'下载安装版','portable-title':'绿色版','portable-desc':'解压即用，无需安装。适合遇到安装问题或偏好便携使用的用户。','portable-btn':'下载绿色版','widget-title':'Xbox Game Bar 组件','widget-name':'KoPanel Widget','widget-desc':'游戏内 Win+G 快速调节 TDP/风扇，支持手柄导航。需先安装证书。','widget-btn':'下载 Widget','widget-guide-title':'安装说明','widget-guide':'1. 下载并解压 zip 文件<br>2. <b>右键以管理员身份运行</b>"安装证书.bat"<br>3. 双击 KoPanelWidget.msix 安装<br>4. 启动 KoPanel，Win+G → 小组件 → KoPanel','features-title':'强大功能，尽在掌控。','f1-name':'性能调节','f1-text':'TDP、CPU 频率、GPU 时钟精准控制，发挥硬件最大潜能。','f2-name':'风扇控制','f2-text':'支持自定义风扇曲线，在静音与散热之间找到完美平衡。','f3-name':'显示设置','f3-text':'快速切换分辨率和刷新率，适配不同游戏需求。','f4-name':'手柄映射','f4-text':'陀螺仪映射为右摇杆，实现高精度体感瞄准体验。','f5-name':'系统优化','f5-text':'一键禁用遥测、优化服务，为游戏腾出更多资源。','f6-name':'游戏管理','f6-text':'自动扫描 Steam 库，支持手动添加，自动应用配置。','feedback':'问题反馈','stats-link':'查看数据统计 →','qq-group':'QQ 群: 178193167'},
+      en:{'title':'KO Panel','subtitle':'Built for Windows handhelds.<br>Lightweight, full gamepad control, completely free.','setup-title':'Installer','setup-desc':'Standard Windows installer with auto configuration. Recommended for most users.','setup-btn':'Download Installer','portable-title':'Portable','portable-desc':'Extract and run. For users with installation issues or who prefer portable apps.','portable-btn':'Download Portable','widget-title':'Xbox Game Bar Widget','widget-name':'KoPanel Widget','widget-desc':'Quick TDP/Fan control in-game via Win+G. Supports gamepad navigation. Install cert first.','widget-btn':'Download Widget','widget-guide-title':'Installation Guide','widget-guide':'1. Download and extract the zip file<br>2. <b>Right-click Run as Administrator</b> the install cert bat<br>3. Double-click KoPanelWidget.msix to install<br>4. Launch KoPanel, Win+G → Widgets → KoPanel','features-title':'Powerful features at your fingertips.','f1-name':'Performance Control','f1-text':'Precise TDP, CPU frequency, and GPU clock control.','f2-name':'Fan Control','f2-text':'Custom fan curves for the perfect balance between silence and cooling.','f3-name':'Display Settings','f3-text':'Quick resolution and refresh rate switching for different games.','f4-name':'Gamepad Mapping','f4-text':'Gyroscope to right stick mapping for high-precision motion aiming.','f5-name':'System Optimization','f5-text':'One-click disable telemetry and optimize services.','f6-name':'Game Management','f6-text':'Auto-scan Steam library, manual additions, auto-apply per-game profiles.','feedback':'Feedback','stats-link':'View Analytics →','qq-group':'QQ Group: 178193167'}
     };
     var currentLang='zh';
-    function switchLang(l){
-      currentLang=l;
-      document.getElementById('btn-zh').classList.toggle('active',l==='zh');
-      document.getElementById('btn-en').classList.toggle('active',l==='en');
-      document.documentElement.lang=l==='zh'?'zh-CN':'en';
-      document.title=l==='zh'?'KO掌机助手 - 极致性能体验':'KO Panel - Ultimate Performance';
-      var t=i18n[l];
-      document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});
-      if(window._ic){var el=document.getElementById('install-count');el.textContent=(l==='en'?'Trusted by ':'已有 ')+window._ic.toLocaleString()+(l==='en'?' devices worldwide':' 台设备在使用')}
-    }
+    function switchLang(l){currentLang=l;document.getElementById('btn-zh').classList.toggle('active',l==='zh');document.getElementById('btn-en').classList.toggle('active',l==='en');document.documentElement.lang=l==='zh'?'zh-CN':'en';document.title=l==='zh'?'KO掌机助手 - 极致性能体验':'KO Panel - Ultimate Performance';var t=i18n[l];document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});if(window._ic){var el=document.getElementById('install-count');el.textContent=(l==='en'?'Trusted by ':'已有 ')+window._ic.toLocaleString()+(l==='en'?' devices worldwide':' 台设备在使用')}}
     if(!(navigator.language||'').toLowerCase().startsWith('zh'))switchLang('en');
 
-    // Scroll reveal
     var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:0.1});
-    document.querySelectorAll('.fade-in,.widget-section,.feat-section').forEach(function(el){obs.observe(el)});
+    document.querySelectorAll('.widget-section,.feat-section').forEach(function(el){obs.observe(el)});
 
-    // Version info
     fetch('https://cdn.kobo07.cn/kopanel/update.json?v='+Date.now()).then(function(r){return r.json()}).then(function(d){
       document.querySelector('.hero-badge').textContent='v'+d.version;
       if(d.download_url){document.getElementById('card-setup').href=d.download_url;document.getElementById('file-size').textContent=(d.file_size/1048576).toFixed(0)+' MB'}
@@ -358,16 +255,8 @@
       if(d.widget_version)document.getElementById('widget-version').textContent='v'+d.widget_version;
     }).catch(function(){});
 
-    // Install count
     fetch('https://kopanel-telemetry.kobolingfeng.workers.dev/stats').then(function(r){return r.json()}).then(function(s){
-      if(s.total_devices>0){
-        var el=document.getElementById('install-count');
-        el.textContent=(currentLang==='en'?'Trusted by ':'已有 ')+s.total_devices.toLocaleString()+(currentLang==='en'?' devices worldwide':' 台设备在使用');
-        el.style.opacity='1';
-        window._ic=s.total_devices;
-        document.getElementById('analytics-link').style.display='';
-        document.getElementById('analytics-link').style.opacity='1';
-      }
+      if(s.total_devices>0){var el=document.getElementById('install-count');el.textContent=(currentLang==='en'?'Trusted by ':'已有 ')+s.total_devices.toLocaleString()+(currentLang==='en'?' devices worldwide':' 台设备在使用');el.style.opacity='1';window._ic=s.total_devices;document.getElementById('analytics-link').style.display='';document.getElementById('analytics-link').style.opacity='1'}
     }).catch(function(){});
   </script>
 </body>
