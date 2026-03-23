@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../Downloads/Handheld-Control-Panel-master"
+		}
+	],
+	"settings": {
+		"git.ignoredRepositories": [
+			"front-for-gpdwin5"
+		]
+	}
+}

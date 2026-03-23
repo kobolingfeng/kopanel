@@ -1,0 +1,2812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KoPanel OSD</title>
+  <style>
+    /* 本地 Inter 字体 */
+    @font-face {
+      font-family: 'Inter';
+      src: url('./icons/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2') format('woff2');
+      font-weight: 400 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg-color: rgba(0, 0, 0, 0.4);
+      --bg-card: rgba(23, 23, 23, 0.6);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --text-primary: rgba(255, 255, 255, 0.9);
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --text-dim: rgba(255, 255, 255, 0.4);
+      --text-muted: rgba(255, 255, 255, 0.3);
+      --accent-color: #10b981;
+      --bar-color: linear-gradient(to right, #10b981, #14b8a6);
+      --font-mono: 'JetBrains Mono', 'Consolas', 'Roboto Mono', monospace;
+      --font-ui: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* 主题配色（参考 eex 样式） */
+    .theme-neon {
+      --accent-color: #34d399;
+      --bar-color: linear-gradient(to right, #34d399, #14b8a6);
+    }
+
+    .theme-sunset {
+      --accent-color: #fb923c;
+      --bar-color: linear-gradient(to right, #eab308, #ea580c);
+    }
+
+    .theme-frost {
+      --accent-color: #67e8f9;
+      --bar-color: linear-gradient(to right, #60a5fa, #67e8f9);
+    }
+
+    .theme-crimson {
+      --accent-color: #f43f5e;
+      --bar-color: linear-gradient(to right, #ef4444, #f43f5e);
+    }
+
+    .theme-gold {
+      --accent-color: #facc15;
+      --bar-color: linear-gradient(to right, #facc15, #f59e0b);
+    }
+
+    .theme-lavender {
+      --accent-color: #a78bfa;
+      --bar-color: linear-gradient(to right, #a78bfa, #8b5cf6);
+    }
+
+    /* ========== 透明模式样式（参考 1.html HUD 风格） ========== */
+
+    /* 1. 容器：去除所有背景、边框、阴影 */
+    .visual-transparent .osd-minimal,
+    .visual-transparent .osd-compact-main,
+    .visual-transparent .osd-detailed {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 8px !important;
+    }
+
+    /* 2. 详细模式内部元素：去除背景边框 */
+    .visual-transparent .osd-detailed .hw-icon,
+    .visual-transparent .osd-detailed .footer-card {
+      background: transparent !important;
+      border: none !important;
+    }
+
+    /* 3. 详细模式 header：使用白色边框分隔 */
+    .visual-transparent .osd-detailed .header {
+      border: none !important;
+      padding-bottom: 8px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+      margin-bottom: 8px !important;
+    }
+
+    /* 4. HUD 文字描边效果（核心样式） */
+    .visual-transparent .fps-val {
+      font-weight: 900 !important;
+      text-shadow:
+        -1px -1px 0 rgba(0, 0, 0, 0.8),
+        1px -1px 0 rgba(0, 0, 0, 0.8),
+        -1px 1px 0 rgba(0, 0, 0, 0.8),
+        1px 1px 0 rgba(0, 0, 0, 0.8),
+        0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    /* 5. 主要文字：白色 + 加粗 + 描边 */
+    .visual-transparent .fps-unit,
+    .visual-transparent .stat-val,
+    .visual-transparent .hw-name,
+    .visual-transparent .hw-stats .power,
+    .visual-transparent .hw-stats .load,
+    .visual-transparent .hw-stats .unit-dim,
+    .visual-transparent .val,
+    .visual-transparent .frametime {
+      color: white !important;
+      font-weight: 700 !important;
+      text-shadow:
+        -1px -1px 0 rgba(0, 0, 0, 0.8),
+        1px -1px 0 rgba(0, 0, 0, 0.8),
+        -1px 1px 0 rgba(0, 0, 0, 0.8),
+        1px 1px 0 rgba(0, 0, 0, 0.8),
+        0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    /* 6. 温度值：保留主题色 + 描边 */
+    .visual-transparent .hw-stats .temp {
+      font-weight: 700 !important;
+      text-shadow:
+        -1px -1px 0 rgba(0, 0, 0, 0.8),
+        1px -1px 0 rgba(0, 0, 0, 0.8),
+        -1px 1px 0 rgba(0, 0, 0, 0.8),
+        1px 1px 0 rgba(0, 0, 0, 0.8),
+        0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    /* 7. 标签文字：90%白色 + 描边 */
+    .visual-transparent .fps-label,
+    .visual-transparent .stat-label,
+    .visual-transparent .footer-card-header .label {
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-weight: 700 !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+    }
+
+    /* 8. 次要文字：80%白色 + 描边 */
+    .visual-transparent .hw-sub span,
+    .visual-transparent .sub,
+    .visual-transparent .time-footer {
+      color: rgba(255, 255, 255, 0.8) !important;
+      font-weight: 700 !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+    }
+
+    /* 9. 图标：白色 + 强阴影 */
+    .visual-transparent .hw-icon svg,
+    .visual-transparent .footer-card-header svg,
+    .visual-transparent .stat svg,
+    .visual-transparent .fps-section svg {
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9));
+      color: white !important;
+    }
+
+    .visual-transparent .pulse-dot {
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9));
+    }
+
+    /* 10. 分隔线：50%白色 + 阴影 */
+    .visual-transparent .divider {
+      background: rgba(255, 255, 255, 0.5) !important;
+      box-shadow: 0 0 2px black;
+    }
+
+    .visual-transparent .fps-section {
+      border-color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+    .visual-transparent .battery-section {
+      border-color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+    /* 11. 进度条：深色轨道 + 亮色边框 */
+    .visual-transparent .progress-bar {
+      background: rgba(0, 0, 0, 0.8) !important;
+      height: 4px !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .visual-transparent .progress-fill {
+      filter: brightness(1.2);
+    }
+
+    /* 12. 图表容器：30%黑色背景 + 模糊 */
+    .visual-transparent .graph-box {
+      background: rgba(0, 0, 0, 0.3) !important;
+      border: none !important;
+      border-radius: 4px !important;
+    }
+
+    .visual-transparent .osd-compact-graph {
+      background: rgba(0, 0, 0, 0.3) !important;
+      border: none !important;
+      backdrop-filter: blur(2px);
+    }
+
+    /* 13. 硬件列表间距 */
+    .visual-transparent .hw-grid {
+      gap: 8px !important;
+    }
+
+    /* 14. 页脚区域：Grid 布局 + 白色边框分隔 */
+    .visual-transparent .footer-grid {
+      gap: 8px !important;
+      padding-top: 8px !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+      margin-top: 4px !important;
+    }
+
+    /* 15. 时间页脚 */
+    .visual-transparent .time-footer {
+      border: none !important;
+      opacity: 0.8;
+    }
+
+    /* ========== 透明模式专用详细布局样式 ========== */
+    .osd-detailed-trans {
+      width: 300px;
+      padding: 8px;
+    }
+
+    /* Header: FPS + 图表横向 */
+    .trans-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+      margin-bottom: 8px;
+    }
+
+    .trans-fps-area {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trans-fps-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      line-height: 1;
+    }
+
+    .trans-fps-val {
+      font-family: var(--font-mono);
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--accent-color);
+      display: inline-block;
+      width: 96px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .trans-fps-unit {
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 6px;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .trans-frametime {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: white;
+      opacity: 0.8;
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+    }
+
+    .trans-graph {
+      flex: 1;
+      height: 40px;
+      margin-bottom: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+    }
+
+    .trans-graph svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* 硬件列表 */
+    .trans-hw-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .trans-hw-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .trans-hw-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .trans-hw-left svg {
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9));
+      color: white;
+    }
+
+    .trans-hw-name {
+      font-weight: 700;
+      color: white;
+      width: 64px;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .trans-hw-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .trans-temp {
+      color: var(--accent-color);
+      font-weight: 700;
+      min-width: 24px;
+      text-align: right;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .trans-val {
+      color: white;
+      font-weight: 700;
+      min-width: 32px;
+      text-align: right;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .trans-dim {
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 400;
+      font-size: 10px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
+    }
+
+    .trans-progress {
+      height: 4px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .trans-progress-fill {
+      height: 100%;
+      background: var(--accent-color);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+
+    /* 底部 */
+    .trans-footer {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.4);
+      margin-top: 4px;
+      font-size: 12px;
+    }
+
+    .trans-footer-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .trans-footer-item:nth-child(1) {
+      justify-content: flex-start;
+    }
+
+    .trans-footer-item:nth-child(3) {
+      justify-content: center;
+    }
+
+    .trans-footer-item:nth-child(5) {
+      justify-content: flex-end;
+    }
+
+    .trans-footer-item svg {
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9));
+      color: white;
+    }
+
+    .trans-footer-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: white;
+      font-variant-numeric: tabular-nums;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .trans-divider {
+      width: 1px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 2px black;
+    }
+
+    .trans-time {
+      text-align: right;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: white;
+      opacity: 0.8;
+      margin-top: 4px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+    }
+
+    /* ========== 透明模式 - 极简布局 ========== */
+    .osd-minimal-trans {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .osd-minimal-trans .mt-fps-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 0.8;
+    }
+
+    .osd-minimal-trans .mt-fps-val {
+      font-family: var(--font-ui);
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--accent-color);
+      font-variant-numeric: tabular-nums;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .osd-minimal-trans .mt-fps-unit {
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .osd-minimal-trans .mt-stats-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      padding-left: 4px;
+    }
+
+    .osd-minimal-trans .mt-stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: white;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .osd-minimal-trans .mt-stat svg {
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9));
+      width: 12px;
+      height: 12px;
+    }
+
+    .osd-minimal-trans .mt-stat-val {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .osd-minimal-trans .mt-sep {
+      opacity: 0.6;
+    }
+
+    /* ========== 透明模式 - 灵动布局 ========== */
+    .osd-compact-trans {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .osd-compact-trans .ct-fps-area {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 140px;
+    }
+
+    .osd-compact-trans .ct-fps-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      line-height: 0.9;
+    }
+
+    .osd-compact-trans .ct-fps-val {
+      font-family: var(--font-ui);
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--accent-color);
+      display: inline-block;
+      width: 80px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .osd-compact-trans .ct-fps-unit {
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .osd-compact-trans .ct-graph {
+      height: 24px;
+      width: 100%;
+      min-width: 140px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+    }
+
+    .osd-compact-trans .ct-graph svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .osd-compact-trans .ct-stats-row {
+      display: flex;
+      gap: 16px;
+      padding-bottom: 4px;
+    }
+
+    .osd-compact-trans .ct-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .osd-compact-trans .ct-stat-val {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      font-variant-numeric: tabular-nums;
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.8), 1px -1px 0 rgba(0, 0, 0, 0.8), -1px 1px 0 rgba(0, 0, 0, 0.8), 1px 1px 0 rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .osd-compact-trans .ct-stat-val .ct-unit {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-left: 1px;
+    }
+
+    .osd-compact-trans .ct-stat-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      opacity: 0.8;
+      text-transform: uppercase;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+    }
+
+    .osd-compact-trans .ct-stat.alert .ct-stat-val {
+      color: #ef4444;
+    }
+
+    /* ========== 横条模式（经典 RTSS 风格） ========== */
+    .osd-wrapper.visual-bar {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .osd-wrapper.visual-bar.top-left {
+      top: 0 !important;
+      left: 0 !important;
+      right: auto !important;
+    }
+
+    .osd-wrapper.visual-bar.top-right {
+      top: 0 !important;
+      right: 0 !important;
+      left: auto !important;
+    }
+
+    .osd-wrapper.visual-bar.bottom-left {
+      bottom: 0 !important;
+      left: 0 !important;
+      right: auto !important;
+      top: auto !important;
+    }
+
+    .osd-wrapper.visual-bar.bottom-right {
+      bottom: 0 !important;
+      right: 0 !important;
+      left: auto !important;
+      top: auto !important;
+    }
+
+    /* ========== 透明横条模式（无背景，加粗描边） ========== */
+    .osd-wrapper.visual-bar-trans {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .osd-wrapper.visual-bar-trans.top-left {
+      top: 0 !important;
+      left: 0 !important;
+      right: auto !important;
+    }
+
+    .osd-wrapper.visual-bar-trans.top-right {
+      top: 0 !important;
+      right: 0 !important;
+      left: auto !important;
+    }
+
+    .osd-wrapper.visual-bar-trans.bottom-left {
+      bottom: 0 !important;
+      left: 0 !important;
+      right: auto !important;
+      top: auto !important;
+    }
+
+    .osd-wrapper.visual-bar-trans.bottom-right {
+      bottom: 0 !important;
+      right: 0 !important;
+      left: auto !important;
+      top: auto !important;
+    }
+
+    /* 透明横条：去除背景，加粗描边 */
+    .visual-bar-trans .osd-bar-base {
+      background: transparent !important;
+      text-shadow:
+        -1px -1px 0 rgba(0, 0, 0, 0.9),
+        1px -1px 0 rgba(0, 0, 0, 0.9),
+        -1px 1px 0 rgba(0, 0, 0, 0.9),
+        1px 1px 0 rgba(0, 0, 0, 0.9),
+        0px 2px 4px rgba(0, 0, 0, 1);
+    }
+
+    .visual-bar-trans .bar-val,
+    .visual-bar-trans .bar-val-fps,
+    .visual-bar-trans .bar-val-num {
+      font-weight: 900 !important;
+    }
+
+    .visual-bar-trans .bar-label {
+      font-weight: 700 !important;
+      color: white !important;
+      text-shadow:
+        -1px -1px 0 rgba(0, 0, 0, 0.9),
+        1px -1px 0 rgba(0, 0, 0, 0.9),
+        -1px 1px 0 rgba(0, 0, 0, 0.9),
+        1px 1px 0 rgba(0, 0, 0, 0.9),
+        0px 2px 4px rgba(0, 0, 0, 1);
+    }
+
+    .visual-bar-trans .bar-unit {
+      font-weight: 700 !important;
+      color: rgba(255, 255, 255, 0.9) !important;
+      text-shadow:
+        -1px -1px 0 rgba(0, 0, 0, 0.9),
+        1px -1px 0 rgba(0, 0, 0, 0.9),
+        -1px 1px 0 rgba(0, 0, 0, 0.9),
+        1px 1px 0 rgba(0, 0, 0, 0.9),
+        0px 2px 4px rgba(0, 0, 0, 1);
+    }
+
+    .visual-bar-trans .bar-sep {
+      color: rgba(255, 255, 255, 0.6) !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
+    }
+
+    /* 横条基础样式 - 类似 RTSS 的纯文本风格 */
+    .osd-bar-base {
+      background: rgba(0, 0, 0, 0.75);
+      padding: 2px 6px;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      line-height: 1.4;
+      color: white;
+      white-space: nowrap;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.9), -1px -1px 1px rgba(0, 0, 0, 0.9);
+    }
+
+    /* 横条通用固定宽度类 */
+    .bar-val-fps {
+      color: var(--accent-color);
+      font-weight: 700;
+      font-size: 14px;
+      min-width: 28px;
+      text-align: right;
+      display: inline-block;
+    }
+
+    .bar-val-num {
+      min-width: 20px;
+      text-align: right;
+      display: inline-block;
+    }
+
+    .bar-battery {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .bar-battery-charging {
+      color: #22c55e !important;
+    }
+
+    .bar-battery-charging .bar-val,
+    .bar-battery-charging .bar-unit {
+      color: #22c55e !important;
+    }
+
+    .bar-battery-discharging {
+      color: #fbbf24 !important;
+    }
+
+    .bar-battery-discharging .bar-val,
+    .bar-battery-discharging .bar-unit {
+      color: #fbbf24 !important;
+    }
+
+    .bar-battery-ac {
+      color: #3b82f6 !important;
+    }
+
+    .bar-battery-ac .bar-val,
+    .bar-battery-ac .bar-unit {
+      color: #3b82f6 !important;
+    }
+
+    /* 横条极简模式 - 单行紧凑 */
+    .osd-bar-minimal {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .osd-bar-minimal .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .osd-bar-minimal .bar-label {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 10px;
+    }
+
+    .osd-bar-minimal .bar-val {
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+
+    .osd-bar-minimal .bar-unit {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 10px;
+    }
+
+    /* 横条灵动模式 - 单行更多信息 */
+    .osd-bar-compact {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 3px 8px;
+    }
+
+    .osd-bar-compact .bar-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .osd-bar-compact .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .osd-bar-compact .bar-label {
+      color: #fbbf24;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .osd-bar-compact .bar-val {
+      color: white;
+      font-weight: 600;
+    }
+
+    .osd-bar-compact .bar-unit {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 10px;
+    }
+
+    .osd-bar-compact .bar-sep {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* 横条详细模式 - 单行完整信息 */
+    .osd-bar-detailed {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 3px 8px;
+    }
+
+    .osd-bar-detailed .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .osd-bar-detailed .bar-label {
+      color: #fbbf24;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .osd-bar-detailed .bar-val {
+      color: white;
+      font-weight: 500;
+      min-width: 24px;
+      text-align: right;
+    }
+
+    .osd-bar-detailed .bar-val-fps {
+      color: var(--accent-color);
+      font-weight: 700;
+      font-size: 14px;
+      min-width: 32px;
+      text-align: right;
+    }
+
+    .osd-bar-detailed .bar-unit {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 10px;
+      min-width: 16px;
+    }
+
+    .osd-bar-detailed .bar-sep {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .osd-bar-detailed .bar-battery {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .osd-bar-detailed .bar-battery-charging {
+      color: #22c55e;
+    }
+
+    .osd-bar-detailed .bar-battery-discharging {
+      color: #fbbf24;
+    }
+
+    .osd-bar-detailed .bar-battery-ac {
+      color: #3b82f6;
+    }
+
+    /* 通用颜色类 */
+    .text-green {
+      color: #22c55e !important;
+    }
+
+    .text-red {
+      color: #ef4444 !important;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+
+    html,
+    body {
+      background: transparent !important;
+      overflow: hidden;
+      font-family: var(--font-ui);
+      user-select: none;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .osd-wrapper {
+      position: fixed;
+      padding: 24px;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 50;
+      transform-origin: top left;
+      pointer-events: none;
+    }
+
+    .osd-wrapper.top-left {
+      top: 0;
+      left: 0;
+      transform-origin: top left;
+    }
+
+    .osd-wrapper.top-right {
+      top: 0;
+      right: 0;
+      transform-origin: top right;
+    }
+
+    .osd-wrapper.bottom-left {
+      bottom: 0;
+      left: 0;
+      transform-origin: bottom left;
+    }
+
+    .osd-wrapper.bottom-right {
+      bottom: 0;
+      right: 0;
+      transform-origin: bottom right;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ========== 极简模式 ========== */
+    .osd-minimal {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(20, 20, 23, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      padding: 6px 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      white-space: nowrap;
+    }
+
+    .osd-minimal .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      animation: pulse 2s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .osd-minimal .fps-group {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .osd-minimal .fps-val {
+      font-family: var(--font-ui);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent-color);
+      min-width: 48px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-minimal .fps-unit {
+      font-size: 12px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .osd-minimal .divider {
+      width: 1px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 0 6px;
+      flex-shrink: 0;
+    }
+
+    .osd-minimal .stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .osd-minimal .stat svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    .osd-minimal .stat-val {
+      font-family: var(--font-ui);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ========== 灵动模式 ========== */
+    .osd-compact {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .osd-compact-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(20, 20, 23, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 8px 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .osd-compact .fps-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-right: 16px;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .osd-compact .fps-section svg {
+      width: 18px;
+      height: 18px;
+      color: var(--accent-color);
+    }
+
+    .osd-compact .fps-val {
+      font-family: var(--font-ui);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-color);
+      min-width: 40px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-compact .stats-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .osd-compact .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 40px;
+    }
+
+    .osd-compact .stat-val {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-compact .stat-val .unit {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-left: 1px;
+      font-weight: 400;
+    }
+
+    .osd-compact .stat-label {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .osd-compact .battery-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding-left: 12px;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .osd-compact .battery-section .bat-val {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-compact .battery-section .bat-time {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+      white-space: nowrap;
+      line-height: 1;
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-compact .battery-section svg {
+      width: 14px;
+      height: 14px;
+      margin-right: 4px;
+    }
+
+    .osd-compact-graph {
+      width: 100%;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+    }
+
+    .graph-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .graph-container svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ========== 详细模式 ========== */
+    .osd-detailed {
+      width: 260px;
+      background: rgba(20, 20, 23, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .osd-detailed .header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px 16px 8px 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .osd-detailed .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .osd-detailed .fps-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+
+    .osd-detailed .fps-group {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      line-height: 1;
+    }
+
+    .osd-detailed .fps-val {
+      font-family: var(--font-ui);
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--accent-color);
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-detailed .fps-unit {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 700;
+      padding-bottom: 4px;
+    }
+
+    .osd-detailed .frametime {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      color: white;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-detailed .frametime .dim {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 9px;
+    }
+
+    .osd-detailed .graph-box {
+      height: 32px;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .osd-detailed .graph-box::before {
+      content: none;
+    }
+
+    .osd-detailed .hw-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px 16px;
+    }
+
+    .osd-detailed .hw-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .osd-detailed .hw-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.6);
+      flex-shrink: 0;
+    }
+
+    .osd-detailed .hw-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .osd-detailed .hw-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .osd-detailed .hw-header {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .osd-detailed .hw-name {
+      flex: 1;
+      min-width: 0;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .osd-detailed .hw-stats {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      font-size: 10px;
+      font-family: var(--font-ui);
+    }
+
+    .osd-detailed .hw-stats .temp {
+      color: var(--accent-color);
+      font-weight: 700;
+      min-width: 20px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-detailed .hw-stats .sep {
+      display: none;
+    }
+
+    .osd-detailed .hw-stats .power {
+      color: white;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      min-width: 28px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      opacity: 0.8;
+    }
+
+    .osd-detailed .hw-stats .load {
+      color: white;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      min-width: 24px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-detailed .hw-stats .unit-dim {
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 400;
+    }
+
+    .unit-dim {
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 400;
+    }
+
+    .osd-detailed .progress-bar {
+      height: 4px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .osd-detailed .progress-fill {
+      height: 100%;
+      background: var(--accent-color);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .osd-detailed .hw-sub {
+      margin-top: 4px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .osd-detailed .hw-sub span {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: var(--font-ui);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-detailed .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 12px 16px;
+    }
+
+    .osd-detailed .footer-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .osd-detailed .footer-card.charging {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .osd-detailed .footer-card-header {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .osd-detailed .footer-card-header svg {
+      width: 12px;
+      height: 12px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .osd-detailed .footer-card-header .label {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .osd-detailed .footer-card .val {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-detailed .footer-card .val .unit {
+      font-size: 9px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .osd-detailed .footer-card .sub {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+      font-family: var(--font-ui);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .osd-detailed .time-footer {
+      padding: 8px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 500;
+      font-family: var(--font-ui);
+    }
+
+    /* 智能风扇动画（速度基于 RPM 动态调整） */
+    .fan-icon {
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* 智能电池图标样式 */
+    .battery-icon {
+      transition: color 0.5s;
+    }
+
+    .battery-icon.charging {
+      color: #22c55e !important;
+    }
+
+    .battery-icon.low {
+      color: #ef4444 !important;
+      animation: pulse-battery 1s infinite;
+    }
+
+    .battery-icon.full {
+      color: #22c55e !important;
+    }
+
+    @keyframes pulse-battery {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* 透明模式下温度值更亮 */
+    .visual-transparent .hw-stats .temp {
+      filter: brightness(1.1);
+    }
+
+    /* ========== 自定义模式样式 ========== */
+    .osd-custom {
+      background: rgba(0, 0, 0, 0.75);
+      padding: 4px 10px;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+      line-height: 1.4;
+      color: white;
+      white-space: nowrap;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.9), -1px -1px 1px rgba(0, 0, 0, 0.9);
+      border-radius: 4px;
+    }
+
+    .custom-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .custom-item {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .custom-item.fps {
+      font-size: 15px;
+    }
+
+    .custom-val-fps {
+      color: var(--accent-color);
+      font-weight: 700;
+      min-width: 28px;
+      text-align: right;
+    }
+
+    .custom-val {
+      color: white;
+      font-weight: 600;
+      min-width: 20px;
+      text-align: right;
+    }
+
+    .custom-val.time {
+      color: rgba(255, 255, 255, 0.7);
+      min-width: 60px;
+    }
+
+    .custom-label {
+      color: #fbbf24;
+      font-size: 10px;
+      font-weight: 600;
+      margin-right: 2px;
+    }
+
+    .custom-unit {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 10px;
+    }
+
+    .custom-sep {
+      color: rgba(255, 255, 255, 0.3);
+      margin: 0 2px;
+    }
+
+    .custom-item.charging .custom-val {
+      color: #22c55e;
+    }
+
+    .custom-item.discharging .custom-val {
+      color: #f06060;
+    }
+
+    .custom-item.low .custom-val {
+      color: #ef4444;
+    }
+
+    /* 自定义模式 - 透明样式：去除背景 */
+    .visual-transparent .osd-custom {
+      background: transparent !important;
+    }
+
+    /* 自定义模式 - 透明横条样式：去除背景，加粗描边 */
+    .visual-bar-trans .osd-custom {
+      background: transparent !important;
+      border-radius: 0;
+      padding: 2px 6px;
+      text-shadow:
+        -1px -1px 0 rgba(0, 0, 0, 0.9),
+        1px -1px 0 rgba(0, 0, 0, 0.9),
+        -1px 1px 0 rgba(0, 0, 0, 0.9),
+        1px 1px 0 rgba(0, 0, 0, 0.9),
+        0px 2px 4px rgba(0, 0, 0, 1);
+    }
+
+    .visual-bar-trans .custom-val,
+    .visual-bar-trans .custom-val-fps {
+      font-weight: 900 !important;
+    }
+
+    .visual-bar-trans .custom-label {
+      font-weight: 700 !important;
+    }
+
+    .visual-bar-trans .custom-unit {
+      font-weight: 700 !important;
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .visual-bar-trans .custom-sep {
+      color: rgba(255, 255, 255, 0.6) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="osd-wrapper" class="osd-wrapper top-left theme-neon" style="display: none;"></div>
+
+  <script type="module">
+    // ========== 图标定义 (path-only, 完整图标库) ==========
+    const ICONS = {
+      // 基础图标
+      activity: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />',
+      zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />',
+      bolt: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />',
+      battery: '<rect width="16" height="10" x="2" y="7" rx="2" ry="2" /><line x1="22" x2="22" y1="11" y2="13" />',
+      // 硬件图标
+      fan: '<path d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z" />',
+      cpu: '<rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" /><path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" />',
+      gpu: '<rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" />',
+      aperture: '<circle cx="12" cy="12" r="10" /><path d="m14.31 8 5.74 9.94" /><path d="M9.69 8h11.48" /><path d="m7.38 12 5.74-9.94" /><path d="M9.69 16 3.95 6.06" /><path d="M14.31 16H2.83" /><path d="m16.62 12-5.74 9.94" />',
+      layers: '<polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" />',
+      ram: '<rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" />',
+      // 电源/充电图标
+      plug: '<path d="M12 22v-5" /><path d="M9 8V2" /><path d="M15 8V2" /><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" />',
+      // UI 图标
+      settings: '<path d="M20 7h-9" /><path d="M14 17H5" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" />',
+      square: '<rect width="18" height="18" x="3" y="3" rx="2" />',
+      ghost: '<path d="M9 22v-5" /><path d="M12 22v-5" /><path d="M15 22v-5" /><path d="M19 17v5H5v-5a7 7 0 0 1 14 0Z" /><path d="M8 9h.01" /><path d="M16 9h.01" />',
+    };
+
+    // 渲染图标
+    function renderIcon(name, size = 16, className = '') {
+      const path = ICONS[name] || '';
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className}">${path}</svg>`;
+    }
+
+    // 智能电池图标（带电量填充）
+    function renderSmartBattery(level, isCharging, size = 16, className = '') {
+      const fillWidth = Math.max(0, Math.min(10, (level / 100) * 10));
+      let colorClass = '';
+      if (isCharging) colorClass = 'charging';
+      else if (level <= 20) colorClass = 'low';
+      else if (level >= 90) colorClass = 'full';
+
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="battery-icon ${colorClass} ${className}">
+        <rect x="2" y="7" width="16" height="10" rx="2" ry="2" style="opacity:0.8" />
+        <line x1="22" x2="22" y1="11" y2="13" />
+        ${isCharging
+          ? '<polygon points="10 9 8 12 11 12 9 15 14 11 11 11 13 8" fill="currentColor" stroke="none" />'
+          : `<rect x="4" y="9" width="${fillWidth}" height="6" rx="1" fill="currentColor" stroke="none" class="battery-fill" />`
+        }
+      </svg>`;
+    }
+
+    // ========== 状态 ==========
+    const frametimeHistory = Array(60).fill(6.9);
+    let currentMode = 'compact';
+    let currentTheme = 'neon';
+    let currentPosition = 'top-left';
+    let currentScale = 100;
+    let isTransparentMode = false;
+    let currentVisualStyle = 'solid'; // solid, transparent, bar
+    let currentLang = 'zh'; // 当前语言: zh, en
+    let customItems = ['fps', 'cpu_temp', 'gpu_temp', 'cpu_power', 'battery', 'time']; // 自定义模式显示项目
+
+    // ========== 多语言翻译 ==========
+    const i18n = {
+      zh: {
+        fps: '帧',
+        fps_info: '帧率信息',
+        ms: '毫秒',
+        power: '功耗',
+        fan: '风扇',
+        battery: '电池',
+        memory: '内存',
+        vram: '显存',
+        rpm: '转',
+        charging: '充电中',
+        ac_connected: '插电',
+      },
+      en: {
+        fps: 'FPS',
+        fps_info: 'Frame Rate',
+        ms: 'ms',
+        power: 'Power',
+        fan: 'Fan',
+        battery: 'Battery',
+        memory: 'RAM',
+        vram: 'VRAM',
+        rpm: 'RPM',
+        charging: 'Charging',
+        ac_connected: 'AC',
+      }
+    };
+
+    function t(key) {
+      return i18n[currentLang]?.[key] || i18n['en'][key] || key;
+    }
+
+    // ========== 动态渲染模板 ==========
+    function renderMinimal() {
+      return `
+        <div id="osd-minimal" class="osd-minimal hidden">
+          <div class="pulse-dot"></div>
+          <div class="fps-group">
+            <span class="fps-val" id="m-fps">--</span>
+            <span class="fps-unit" data-i18n="fps">${t('fps')}</span>
+          </div>
+          <div class="divider"></div>
+          <div class="stat">${renderIcon('bolt', 10)}<span class="stat-val" id="m-power">--</span>W</div>
+          <div class="divider"></div>
+          <div class="stat" id="m-battery-section">
+            <span id="m-bat-icon">${renderSmartBattery(50, false, 12)}</span>
+            <span class="stat-val" id="m-battery">--</span>%
+          </div>
+          <div class="divider"></div>
+          <div class="stat"><span class="stat-val" id="m-time">--:--</span></div>
+        </div>
+      `;
+    }
+
+    function renderCompact() {
+      return `
+        <div id="osd-compact" class="osd-compact hidden">
+          <div class="osd-compact-main">
+            <div class="fps-section">${renderIcon('activity', 16)}<span class="fps-val" id="c-fps">--</span></div>
+            <div class="stats-row">
+              <div class="stat-item"><span class="stat-val" id="c-cpu-temp">--<span class="unit">°C</span></span><span class="stat-label">CPU</span></div>
+              <div class="stat-item"><span class="stat-val" id="c-gpu-temp">--<span class="unit">°C</span></span><span class="stat-label">GPU</span></div>
+              <div class="stat-item"><span class="stat-val" id="c-power">--<span class="unit">W</span></span><span class="stat-label" data-i18n="power">${t('power')}</span></div>
+            </div>
+            <div class="battery-section" id="c-battery-section">
+              <span class="bat-val"><span id="c-charging-icon" class="hidden">${renderIcon('bolt', 8)}</span><span id="c-battery">--</span>%</span>
+              <span class="bat-time" id="c-bat-time">--</span>
+            </div>
+          </div>
+          <div class="osd-compact-graph"><div class="graph-container" id="c-graph"></div></div>
+        </div>
+      `;
+    }
+
+    function renderDetailed() {
+      return `
+        <div id="osd-detailed" class="osd-detailed hidden">
+          <div class="header">
+            <div class="header-top">
+              <div><div class="fps-label" data-i18n="fps_info">${t('fps_info')}</div><div class="fps-group"><span class="fps-val" id="d-fps">--</span><span class="fps-unit" data-i18n="fps">${t('fps')}</span></div></div>
+              <div class="frametime"><span id="d-frametime">--</span> <span class="dim" data-i18n="ms">${t('ms')}</span></div>
+            </div>
+            <div class="graph-box"><div class="graph-container" id="d-graph"></div></div>
+          </div>
+          <div class="hw-grid">
+            ${renderHwRow('aperture', 'd-gpu-name', 'GPU', 'd-gpu-temp', 'd-gpu-power', 'd-gpu-usage', 'd-gpu-bar', `<span data-i18n="vram">${t('vram')}</span>: <span id="d-vram">--</span><span class="unit-dim"> / </span><span id="d-vram-total">--</span><span class="unit-dim"> GB</span>`)}
+            ${renderHwRow('cpu', 'd-cpu-name', 'CPU', 'd-cpu-temp', 'd-cpu-power', 'd-cpu-usage', 'd-cpu-bar', `<span data-i18n="fan">${t('fan')}</span>: <span id="d-fan">--</span><span class="unit-dim"> RPM</span>`)}
+            ${renderRamRow()}
+          </div>
+          <div class="footer-grid">
+            <div class="footer-card"><div class="footer-card-header"><span id="d-fan-icon">${renderIcon('fan', 12)}</span><span class="label" data-i18n="fan">${t('fan')}</span></div><span class="val" id="d-fan-rpm">--<span class="unit" data-i18n="rpm"> ${t('rpm')}</span></span></div>
+            <div class="footer-card"><div class="footer-card-header">${renderIcon('bolt', 12)}<span class="label" data-i18n="power">${t('power')}</span></div><span class="val" id="d-total-power">--<span class="unit">W</span></span><span class="sub" id="d-soc-power" style="display:none;"></span></div>
+            <div class="footer-card" id="d-battery-card"><div class="footer-card-header"><span id="d-bat-icon">${renderSmartBattery(50, false, 14)}</span><span class="label" data-i18n="battery">${t('battery')}</span></div><span class="val" id="d-battery">--<span class="unit">%</span></span><span class="sub" id="d-bat-time">--</span></div>
+          </div>
+          <div class="time-footer"><span id="d-api">KoPanel</span><span id="d-time">--:--</span></div>
+        </div>
+      `;
+    }
+
+    function renderHwRow(type, nameId, defaultName, tempId, powerId, usageId, barId, subHtml) {
+      return `
+        <div class="hw-row">
+          <div class="hw-icon">${renderIcon(type, 14)}</div>
+          <div class="hw-content">
+            <div class="hw-header">
+              <span class="hw-name" id="${nameId}">${defaultName}</span>
+              <div class="hw-stats">
+                <span class="temp" id="${tempId}">--</span><span class="unit-dim">°</span>
+                <span class="sep">|</span><span class="power" id="${powerId}">--</span><span class="unit-dim">W</span>
+                <span class="sep">|</span><span class="load" id="${usageId}">--</span><span class="unit-dim">%</span>
+              </div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="${barId}" style="width: 0%"></div></div>
+            <div class="hw-sub"><span>${subHtml}</span></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRamRow() {
+      return `
+        <div class="hw-row">
+          <div class="hw-icon">${renderIcon('layers', 14)}</div>
+          <div class="hw-content">
+            <div class="hw-header">
+              <span class="hw-name" data-i18n="memory">${t('memory')}</span>
+              <div class="hw-stats">
+                <span class="load" id="d-ram">--</span><span class="unit-dim"> / </span>
+                <span class="load" id="d-ram-total">--</span><span class="unit-dim"> GB</span>
+              </div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="d-ram-bar" style="width: 0%"></div></div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ========== 透明模式专用详细布局（参考 1.html HUD 风格） ==========
+    function renderDetailedTransparent() {
+      return `
+        <div id="osd-detailed-trans" class="osd-detailed-trans hidden">
+          <!-- Header: FPS + 帧时间图横向排列 -->
+          <div class="trans-header">
+            <div class="trans-fps-area">
+              <div class="trans-fps-row">
+                <span class="trans-fps-val" id="dt-fps">--</span>
+                <span class="trans-fps-unit">FPS</span>
+              </div>
+              <span class="trans-frametime" id="dt-frametime">--ms</span>
+            </div>
+            <div class="trans-graph" id="dt-graph"></div>
+          </div>
+          
+          <!-- 硬件列表：简化单行布局 -->
+          <div class="trans-hw-list">
+            <div class="trans-hw-row">
+              <div class="trans-hw-left">
+                ${renderIcon('aperture', 14)}
+                <span class="trans-hw-name" id="dt-gpu-name">GPU</span>
+              </div>
+              <div class="trans-hw-right">
+                <span class="trans-temp" id="dt-gpu-temp">--</span><span class="trans-dim">°</span>
+                <span class="trans-val" id="dt-gpu-power">--</span><span class="trans-dim">W</span>
+                <span class="trans-val" id="dt-gpu-usage">--</span><span class="trans-dim">%</span>
+              </div>
+            </div>
+            <div class="trans-progress"><div class="trans-progress-fill" id="dt-gpu-bar"></div></div>
+            
+            <div class="trans-hw-row">
+              <div class="trans-hw-left">
+                ${renderIcon('cpu', 14)}
+                <span class="trans-hw-name" id="dt-cpu-name">CPU</span>
+              </div>
+              <div class="trans-hw-right">
+                <span class="trans-temp" id="dt-cpu-temp">--</span><span class="trans-dim">°</span>
+                <span class="trans-val" id="dt-cpu-power">--</span><span class="trans-dim">W</span>
+                <span class="trans-val" id="dt-cpu-usage">--</span><span class="trans-dim">%</span>
+              </div>
+            </div>
+            <div class="trans-progress"><div class="trans-progress-fill" id="dt-cpu-bar"></div></div>
+            
+            <div class="trans-hw-row">
+              <div class="trans-hw-left">
+                ${renderIcon('layers', 14)}
+                <span class="trans-hw-name">RAM</span>
+              </div>
+              <div class="trans-hw-right">
+                <span class="trans-val" id="dt-ram">--</span><span class="trans-dim"> GB</span>
+              </div>
+            </div>
+            <div class="trans-progress"><div class="trans-progress-fill" id="dt-ram-bar"></div></div>
+          </div>
+          
+          <!-- 底部：横向一行 风扇|功耗|电池 -->
+          <div class="trans-footer">
+            <div class="trans-footer-item">
+              <span id="dt-fan-icon">${renderIcon('fan', 12)}</span>
+              <span class="trans-footer-val" id="dt-fan">--</span><span class="trans-dim">k</span>
+            </div>
+            <div class="trans-divider"></div>
+            <div class="trans-footer-item">
+              ${renderIcon('zap', 12)}
+              <span class="trans-footer-val" id="dt-power">--</span><span class="trans-dim">W</span>
+              <span class="trans-dim" id="dt-soc-power" style="margin-left:4px; display:none;"></span>
+            </div>
+            <div class="trans-divider"></div>
+            <div class="trans-footer-item" id="dt-battery-area">
+              <span id="dt-bat-icon">${renderSmartBattery(50, false, 14)}</span>
+              <span class="trans-footer-val" id="dt-battery">--</span><span class="trans-dim">%</span>
+              <span class="trans-footer-val" id="dt-bat-power" style="margin-left:4px;"></span>
+              <span class="trans-footer-val" id="dt-remain" style="margin-left:4px;color:#fbbf24;"></span>
+            </div>
+          </div>
+          
+          <div class="trans-time" id="dt-time">--:--</div>
+        </div>
+      `;
+    }
+
+    // ========== 透明模式 - 极简布局 ==========
+    function renderMinimalTransparent() {
+      return `
+        <div id="osd-minimal-trans" class="osd-minimal-trans hidden">
+          <div class="mt-fps-row">
+            <span class="mt-fps-val" id="mt-fps">--</span>
+            <span class="mt-fps-unit">FPS</span>
+          </div>
+          <div class="mt-stats-row">
+            <div class="mt-stat">
+              ${renderIcon('zap', 12)}
+              <span class="mt-stat-val" id="mt-power">--</span>W
+            </div>
+            <span class="mt-sep">/</span>
+            <div class="mt-stat" id="mt-battery-area">
+              <span id="mt-bat-icon">${renderIcon('battery', 12)}</span>
+              <span id="mt-battery">--</span>%
+            </div>
+            <span class="mt-sep">/</span>
+            <div class="mt-stat">
+              <span class="mt-stat-val" id="mt-time">--:--</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ========== 透明模式 - 灵动布局 ==========
+    function renderCompactTransparent() {
+      return `
+        <div id="osd-compact-trans" class="osd-compact-trans hidden">
+          <div class="ct-fps-area">
+            <div class="ct-fps-row">
+              <span class="ct-fps-val" id="ct-fps">--</span>
+              <span class="ct-fps-unit">FPS</span>
+            </div>
+            <div class="ct-graph" id="ct-graph"></div>
+          </div>
+          <div style="width:8px;"></div>
+          <div class="ct-stats-row">
+            <div class="ct-stat" id="ct-cpu-stat">
+              <span class="ct-stat-val"><span id="ct-cpu-temp">--</span><span class="ct-unit">°</span></span>
+              <span class="ct-stat-label">CPU</span>
+            </div>
+            <div class="ct-stat" id="ct-gpu-stat">
+              <span class="ct-stat-val"><span id="ct-gpu-temp">--</span><span class="ct-unit">°</span></span>
+              <span class="ct-stat-label">GPU</span>
+            </div>
+            <div class="ct-stat">
+              <span class="ct-stat-val"><span id="ct-power">--</span><span class="ct-unit">W</span></span>
+              <span class="ct-stat-label">PWR</span>
+            </div>
+            <div class="ct-stat" id="ct-battery-stat">
+              <span class="ct-stat-val"><span id="ct-battery">--</span><span class="ct-unit">%</span></span>
+              <span class="ct-stat-label" id="ct-battery-label">BAT</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ========== 横条模式布局（经典 RTSS 风格） ==========
+    function renderBarMinimal() {
+      return `
+        <div id="osd-bar-minimal" class="osd-bar-base osd-bar-minimal hidden">
+          <div class="bar-item"><span class="bar-val bar-val-fps" id="bm-fps">--</span><span class="bar-unit">FPS</span></div>
+          <div class="bar-item"><span class="bar-val bar-val-num" id="bm-power">--</span><span class="bar-unit">W</span></div>
+          <div class="bar-battery" id="bm-battery-container"><span class="bar-val bar-val-num" id="bm-battery">--</span><span class="bar-unit" id="bm-battery-unit">%</span></div>
+          <div class="bar-item"><span class="bar-val" id="bm-time" style="color: rgba(255,255,255,0.7);">--:--</span></div>
+        </div>
+      `;
+    }
+
+    function renderBarCompact() {
+      return `
+        <div id="osd-bar-compact" class="osd-bar-base osd-bar-compact hidden">
+          <div class="bar-item"><span class="bar-val bar-val-fps" id="bc-fps">--</span><span class="bar-unit">FPS</span></div>
+          <span class="bar-sep">|</span>
+          <div class="bar-group">
+            <div class="bar-item"><span class="bar-label">CPU</span><span class="bar-val bar-val-num" id="bc-cpu-temp">--</span><span class="bar-unit">°</span></div>
+            <div class="bar-item"><span class="bar-label">GPU</span><span class="bar-val bar-val-num" id="bc-gpu-temp">--</span><span class="bar-unit">°</span></div>
+          </div>
+          <span class="bar-sep">|</span>
+          <div class="bar-item"><span class="bar-val bar-val-num" id="bc-power">--</span><span class="bar-unit">W</span></div>
+          <div class="bar-battery" id="bc-battery-container"><span class="bar-val bar-val-num" id="bc-battery">--</span><span class="bar-unit" id="bc-battery-unit">%</span></div>
+        </div>
+      `;
+    }
+
+    function renderBarDetailed() {
+      return `
+        <div id="osd-bar-detailed" class="osd-bar-base osd-bar-detailed hidden">
+          <div class="bar-item"><span class="bar-val-fps" id="bd-fps">--</span><span class="bar-unit">FPS</span></div>
+          <span class="bar-sep">|</span>
+          <div class="bar-item"><span class="bar-label">CPU</span><span class="bar-val" id="bd-cpu-temp">--</span><span class="bar-unit">°</span><span class="bar-val" id="bd-cpu-usage">--</span><span class="bar-unit">%</span><span class="bar-val" id="bd-cpu-power">--</span><span class="bar-unit">W</span></div>
+          <span class="bar-sep">|</span>
+          <div class="bar-item"><span class="bar-label">GPU</span><span class="bar-val" id="bd-gpu-temp">--</span><span class="bar-unit">°</span><span class="bar-val" id="bd-gpu-usage">--</span><span class="bar-unit">%</span><span class="bar-val" id="bd-gpu-power">--</span><span class="bar-unit">W</span></div>
+          <span class="bar-sep">|</span>
+          <div class="bar-item"><span class="bar-val" id="bd-ram">--</span><span class="bar-unit">GB</span></div>
+          <div class="bar-item"><span class="bar-val" id="bd-fan">--</span><span class="bar-unit">RPM</span></div>
+          <span class="bar-sep">|</span>
+          <div class="bar-battery" id="bd-battery-container"><span class="bar-val" id="bd-battery">--</span><span class="bar-unit" id="bd-battery-unit">%</span></div>
+          <div class="bar-item bar-bat-power" id="bd-bat-power-container"><span class="bar-val" id="bd-bat-power">--</span><span class="bar-unit">W</span></div>
+          <div class="bar-item bar-remain" id="bd-remain-container"><span class="bar-val" id="bd-remain">--</span></div>
+          <span class="bar-sep">|</span>
+          <div class="bar-item"><span class="bar-val" id="bd-time" style="color: rgba(255,255,255,0.7); min-width: 40px;">--:--</span></div>
+        </div>
+      `;
+    }
+
+    // ========== 自定义模式布局 ==========
+    function renderCustom() {
+      return `
+        <div id="osd-custom" class="osd-custom hidden">
+          <div class="custom-row" id="custom-items-row"></div>
+        </div>
+      `;
+    }
+
+    // 根据 customItems 渲染自定义模式内容
+    function updateCustomModeContent(d) {
+      const row = document.getElementById('custom-items-row');
+      if (!row) return;
+      let html = '';
+      const fps = Math.round(d?.fps || 0);
+      const ft = d?.frametime > 0 ? d.frametime.toFixed(1) : '--';
+      const cpuTemp = Math.round(d?.cpu_temp || 0);
+      const gpuTemp = Math.round(d?.gpu_temp || 0);
+      const cpuPower = Math.round(d?.cpu_power || 0);
+      const gpuPower = Math.round(d?.gpu_power || 0);
+      const totalPower = cpuPower + gpuPower;
+      const battery = Math.round(d?.battery || 0);
+      const batteryPower = d?.battery_power || 0;
+      const isCharging = !!d?.is_charging;
+      const isAcConnected = !!d?.is_ac_connected;
+      const fanSpeed = d?.fan_speed || 0;
+      const ram = d?.ram_usage ? d.ram_usage.toFixed(1) : '--';
+      const vram = d?.vram_usage ? d.vram_usage.toFixed(1) : '--';
+      const batteryCapacityWh = (d?.battery_capacity != null && d?.battery_capacity > 0) ? d.battery_capacity : 40;
+      const batteryWh = battery * batteryCapacityWh / 100;
+      let remainTime = '--';
+      if (!isAcConnected && batteryPower > 0.5) {
+        const hours = batteryWh / batteryPower;
+        const h = Math.floor(hours), m = Math.floor((hours - h) * 60);
+        remainTime = h > 0 ? `${h}h${m}m` : `${m}m`;
+      }
+      const now = new Date();
+      const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+      customItems.forEach((item, idx) => {
+        if (idx > 0) html += '<span class="custom-sep">|</span>';
+        switch (item) {
+          case 'fps':
+            html += `<span class="custom-item fps"><span class="custom-val-fps">${fps}</span><span class="custom-unit">FPS</span></span>`;
+            break;
+          case 'frametime':
+            html += `<span class="custom-item"><span class="custom-val">${ft}</span><span class="custom-unit">ms</span></span>`;
+            break;
+          case 'cpu_temp':
+            html += `<span class="custom-item"><span class="custom-label">CPU</span><span class="custom-val">${cpuTemp}</span><span class="custom-unit">°</span></span>`;
+            break;
+          case 'gpu_temp':
+            html += `<span class="custom-item"><span class="custom-label">GPU</span><span class="custom-val">${gpuTemp}</span><span class="custom-unit">°</span></span>`;
+            break;
+          case 'cpu_power':
+            html += `<span class="custom-item"><span class="custom-val">${cpuPower}</span><span class="custom-unit">W</span></span>`;
+            break;
+          case 'gpu_power':
+            html += `<span class="custom-item"><span class="custom-val">${gpuPower}</span><span class="custom-unit">W</span></span>`;
+            break;
+          case 'battery':
+            const batClass = isCharging ? 'charging' : (battery <= 20 ? 'low' : '');
+            html += `<span class="custom-item ${batClass}"><span class="custom-val">${battery}</span><span class="custom-unit">%</span></span>`;
+            break;
+          case 'battery_power':
+            if (batteryPower > 0.5) {
+              html += `<span class="custom-item discharging"><span class="custom-val">-${batteryPower.toFixed(1)}</span><span class="custom-unit">W</span></span>`;
+            } else if (batteryPower < -0.5) {
+              html += `<span class="custom-item charging"><span class="custom-val">+${(-batteryPower).toFixed(1)}</span><span class="custom-unit">W</span></span>`;
+            } else {
+              html += `<span class="custom-item"><span class="custom-val">--</span><span class="custom-unit">W</span></span>`;
+            }
+            break;
+          case 'remaining':
+            html += `<span class="custom-item"><span class="custom-val">${remainTime}</span></span>`;
+            break;
+          case 'fan':
+            html += `<span class="custom-item"><span class="custom-val">${fanSpeed}</span><span class="custom-unit">RPM</span></span>`;
+            break;
+          case 'ram':
+            html += `<span class="custom-item"><span class="custom-label">RAM</span><span class="custom-val">${ram}</span><span class="custom-unit">GB</span></span>`;
+            break;
+          case 'vram':
+            html += `<span class="custom-item"><span class="custom-label">VRAM</span><span class="custom-val">${vram}</span><span class="custom-unit">GB</span></span>`;
+            break;
+          case 'time':
+            html += `<span class="custom-item"><span class="custom-val time">${timeStr}</span></span>`;
+            break;
+        }
+      });
+      row.innerHTML = html;
+    }
+
+    function setCustomItems(items) {
+      if (Array.isArray(items) && items.length > 0) {
+        customItems = items;
+        console.log('[OSD] 自定义项目已更新:', items);
+      }
+    }
+
+    function initOSD() {
+      const wrapper = document.getElementById('osd-wrapper');
+      wrapper.innerHTML = renderMinimal() + renderMinimalTransparent() + renderCompact() + renderCompactTransparent() + renderDetailed() + renderDetailedTransparent() + renderBarMinimal() + renderBarCompact() + renderBarDetailed() + renderCustom();
+    }
+
+    // ========== 工具函数 ==========
+    function updateTime() {
+      const now = new Date();
+      const h = now.getHours().toString().padStart(2, '0');
+      const m = now.getMinutes().toString().padStart(2, '0');
+      const s = now.getSeconds().toString().padStart(2, '0');
+      const timeStr = `${h}:${m}:${s}`;
+      // Detailed mode
+      const el = document.getElementById('d-time');
+      if (el) el.textContent = timeStr;
+      const elTrans = document.getElementById('dt-time');
+      if (elTrans) elTrans.textContent = timeStr;
+      // Bar mode (detailed already has bd-time, add minimal)
+      const elBar = document.getElementById('bd-time');
+      if (elBar) elBar.textContent = timeStr;
+      const elBarMinimal = document.getElementById('bm-time');
+      if (elBarMinimal) elBarMinimal.textContent = timeStr;
+      // Minimal mode
+      const elMinimal = document.getElementById('m-time');
+      if (elMinimal) elMinimal.textContent = timeStr;
+      const elMinimalTrans = document.getElementById('mt-time');
+      if (elMinimalTrans) elMinimalTrans.textContent = timeStr;
+    }
+
+    // 横条模式电池状态更新
+    function updateBarBattery(prefix, battery, isAcConnected, isCharging, showAlways) {
+      const container = document.getElementById(`${prefix}-battery-container`);
+      const batEl = document.getElementById(`${prefix}-battery`);
+      const unit = document.getElementById(`${prefix}-battery-unit`);
+      if (!container || !batEl) return;
+      container.className = 'bar-battery';
+      if (!showAlways && battery <= 0 && isAcConnected) {
+        // 无电池，AC 供电
+        batEl.textContent = 'AC';
+        if (unit) unit.textContent = '';
+        container.classList.add('bar-battery-ac');
+      } else if (isCharging) {
+        // 充电中
+        batEl.textContent = battery;
+        if (unit) unit.textContent = '%↑';
+        container.classList.add('bar-battery-charging');
+      } else if (isAcConnected) {
+        // AC 已连接但未充电（已充满）
+        batEl.textContent = battery;
+        if (unit) unit.textContent = '%';
+        container.classList.add('bar-battery-charging');
+      } else {
+        // 放电
+        batEl.textContent = battery;
+        if (unit) unit.textContent = '%';
+        container.classList.add('bar-battery-discharging');
+      }
+    }
+
+    function renderFrametimeGraph(containerId, data, color) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const maxScale = 33.3;
+      const totalBars = data.length;
+      const barWidth = 100 / totalBars;
+      const gap = 15 / totalBars;
+      const refLineY = 100 - (16.6 / maxScale) * 100;
+
+      // 兼容：有些数据可能是“秒”(例如 0.006)，这里自动按秒转毫秒
+      const safeData = data
+        .map(v => (typeof v === 'number' && v > 0 && v < 1 ? v * 1000 : v))
+        .map(v => (typeof v === 'number' && isFinite(v) && v > 0 ? v : 0));
+
+      let bars = '';
+      for (let i = 0; i < safeData.length; i++) {
+        const ms = safeData[i];
+        const h = Math.min(100, (ms / maxScale) * 100);
+        let barColor = color, opacity = isTransparentMode ? 0.8 : 0.5;
+        if (ms > 20) { barColor = '#ef4444'; opacity = 1; }
+        else if (ms > 12) { barColor = '#eab308'; opacity = 0.9; }
+        bars += `<rect x="${i * barWidth}" y="${100 - h}" width="${Math.max(0, barWidth - gap)}" height="${h}" fill="${barColor}" opacity="${opacity}"/>`;
+      }
+
+      container.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width:100%;height:100%;">${bars}<line x1="0" y1="${refLineY}" x2="100" y2="${refLineY}" stroke="rgba(255,255,255,0.2)" stroke-width="0.5" stroke-dasharray="2,2"/></svg>`;
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      // 隐藏所有布局
+      const allLayouts = [
+        'osd-minimal', 'osd-minimal-trans', 'osd-compact', 'osd-compact-trans',
+        'osd-detailed', 'osd-detailed-trans', 'osd-bar-minimal', 'osd-bar-compact', 'osd-bar-detailed', 'osd-custom'
+      ];
+      allLayouts.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+
+      // 自定义模式
+      if (mode === 'custom') {
+        document.getElementById('osd-custom')?.classList.remove('hidden');
+        return;
+      }
+
+      // 根据视觉样式和显示模式选择布局
+      if (currentVisualStyle === 'bar' || currentVisualStyle === 'bar-trans') {
+        // 横条模式（包括透明横条）
+        if (mode === 'minimal') document.getElementById('osd-bar-minimal')?.classList.remove('hidden');
+        else if (mode === 'compact') document.getElementById('osd-bar-compact')?.classList.remove('hidden');
+        else if (mode === 'detailed') document.getElementById('osd-bar-detailed')?.classList.remove('hidden');
+      } else if (currentVisualStyle === 'transparent') {
+        // 透明模式
+        if (mode === 'minimal') document.getElementById('osd-minimal-trans')?.classList.remove('hidden');
+        else if (mode === 'compact') document.getElementById('osd-compact-trans')?.classList.remove('hidden');
+        else if (mode === 'detailed') document.getElementById('osd-detailed-trans')?.classList.remove('hidden');
+      } else {
+        // 实体模式
+        if (mode === 'minimal') document.getElementById('osd-minimal')?.classList.remove('hidden');
+        else if (mode === 'compact') document.getElementById('osd-compact')?.classList.remove('hidden');
+        else if (mode === 'detailed') document.getElementById('osd-detailed')?.classList.remove('hidden');
+      }
+    }
+
+    function setVisualStyle(style) {
+      currentVisualStyle = style;
+      const wrapper = document.getElementById('osd-wrapper');
+      // 更新 wrapper 类
+      wrapper.classList.remove('visual-transparent', 'visual-bar', 'visual-bar-trans');
+      if (style === 'transparent') wrapper.classList.add('visual-transparent');
+      else if (style === 'bar') wrapper.classList.add('visual-bar');
+      else if (style === 'bar-trans') wrapper.classList.add('visual-bar-trans');
+      // 兼容旧的 isTransparentMode 变量
+      isTransparentMode = (style === 'transparent');
+      // 重新设置布局
+      setMode(currentMode);
+    }
+
+    function setTheme(theme) {
+      currentTheme = theme;
+      const wrapper = document.getElementById('osd-wrapper');
+      wrapper.classList.remove('theme-neon', 'theme-sunset', 'theme-frost', 'theme-crimson', 'theme-gold', 'theme-lavender');
+      wrapper.classList.add(`theme-${theme}`);
+    }
+
+    function setPosition(pos) {
+      currentPosition = pos;
+      const wrapper = document.getElementById('osd-wrapper');
+      wrapper.classList.remove('top-left', 'top-right', 'bottom-left', 'bottom-right');
+      wrapper.classList.add(pos);
+      const origins = { 'top-left': 'top left', 'top-right': 'top right', 'bottom-left': 'bottom left', 'bottom-right': 'bottom right' };
+      wrapper.style.transformOrigin = origins[pos] || 'top left';
+    }
+
+    function setScale(scale) {
+      currentScale = scale;
+      document.getElementById('osd-wrapper').style.transform = `scale(${scale / 100})`;
+    }
+
+    function getThemeColor() {
+      const colors = { sunset: '#fb923c', frost: '#67e8f9', crimson: '#f43f5e', gold: '#facc15', lavender: '#a78bfa' };
+      return colors[currentTheme] || '#34d399';
+    }
+
+    function updateBatteryTime(battery, isAcConnected, isCharging, power) {
+      if (isCharging) return t('charging');
+      if (isAcConnected) return t('ac_connected');
+      if (!power || power <= 0) return '--';
+      const wh = battery * 0.4, hours = wh / power, h = Math.floor(hours), m = Math.floor((hours - h) * 60);
+      if (h <= 0) return `${m}m`;
+      return `${h}h${m}m`;
+    }
+
+    function updateBatteryIcon(iconEl, battery, isAcConnected, isCharging) {
+      if (!iconEl) return;
+      // 缓存电池状态，跳过无变化的 innerHTML 重建
+      const key = `${battery}-${isCharging}-${isAcConnected}`;
+      if (iconEl._batKey === key) return;
+      iconEl._batKey = key;
+      // 三态：放电 / 充电 / 插电未充
+      if (isAcConnected && !isCharging) {
+        iconEl.innerHTML = renderIcon('plug', 14);
+        return;
+      }
+      // 使用智能电池图标重新渲染
+      iconEl.innerHTML = renderSmartBattery(battery, isCharging, 14);
+    }
+
+    // ========== OSD 启用状态 ==========
+    let osdEnabled = false;  // 默认禁用，等待用户开启
+    let desktopMode = false; // 常驻桌面模式（忽略 fps=0 隐藏逻辑）
+
+    function setDesktopMode(enabled) {
+      desktopMode = enabled;
+      console.log('[OSD] 常驻桌面模式:', enabled);
+    }
+
+    async function setOsdEnabled(enabled) {
+      osdEnabled = enabled;
+      const wrapper = document.getElementById('osd-wrapper');
+      if (!enabled) {
+        wrapper.style.display = 'none';
+      } else {
+        // 启用时通知主窗口立即刷新数据（解决时序问题）
+        try {
+          const { emit } = window.__TAURI__.event;
+          await emit('osd-request-refresh');
+          console.log('[OSD] 已请求数据刷新');
+        } catch (e) {
+          console.error('[OSD] 请求刷新失败:', e);
+        }
+      }
+      console.log('[OSD] 启用状态:', enabled);
+    }
+
+    // ========== 数据更新 ==========
+    function updateOSD(d) {
+      const wrapper = document.getElementById('osd-wrapper');
+      // 未启用时隐藏
+      if (!osdEnabled) {
+        wrapper.style.display = 'none';
+        return;
+      }
+      // FPS=0 时隐藏 OSD（但不 return，继续更新数据以便状态切换时能立即显示）
+      // 常驻桌面模式下始终显示
+      if (!desktopMode && (d.fps === undefined || d.fps <= 0)) {
+        wrapper.style.display = 'none';
+      } else {
+        wrapper.style.display = 'block';
+      }
+
+      // 自定义模式更新
+      if (currentMode === 'custom') {
+        updateCustomModeContent(d);
+      }
+
+      const fps = Math.round(d.fps), ft = d.frametime > 0 ? d.frametime.toFixed(1) : '--';
+      // Lossless Scaling 数据
+      const lsFps = Math.round(d.ls_fps || 0);
+      const lsRunning = !!d.ls_running;
+      // 构建 FPS 显示字符串：如果 LS 运行中且有输出，显示 "游戏FPS→LS输出FPS"
+      const fpsDisplay = (lsRunning && lsFps > 0) ? `${fps}→${lsFps}` : `${fps}`;
+      const cpuTemp = Math.round(d.cpu_temp || 0), cpuUsage = Math.round(d.cpu_usage || 0), cpuPower = Math.round(d.cpu_power || 0);
+      const socPower = Math.round(d.soc_power || 0);
+      const gpuTemp = Math.round(d.gpu_temp || 0), gpuUsage = Math.round(d.gpu_usage || 0), gpuPower = Math.round(d.gpu_power || 0);
+      // totalPower：尽量贴近“平台总功耗”口径
+      // - socPower(SoC/APU 总功耗) 可用时优先使用；否则回退 cpuPower(CPU 核心功耗)
+      // - 再加上独显功耗（如果有）
+      const basePower = socPower > 0 ? socPower : cpuPower;
+      const totalPower = basePower + gpuPower, fanSpeed = d.fan_speed || 0, battery = Math.round(d.battery || 0);
+      const batteryPower = d.battery_power || 0;  // 电池功耗 W (放电为正,充电为负)
+      const isAcConnected = !!d.is_ac_connected;
+      const isCharging = !!d.is_charging;
+      // 智能功耗：放电时显示电池功率（更准确），接电时显示 SoC(+GPU) / CPU(+GPU)
+      const displayPower = (!isAcConnected && batteryPower > 0.5) ? Math.round(batteryPower) : totalPower;
+      // 使用真实电池容量计算续航时间（只在完全没有值时才用fallback，0不触发fallback）
+      const batteryCapacityWh = (d.battery_capacity != null && d.battery_capacity > 0) ? d.battery_capacity : 40;
+      const batteryWh = battery * batteryCapacityWh / 100;  // 当前剩余电量 Wh
+      let remainTime = '--';
+      if (!isAcConnected && batteryPower > 0.5) {
+        const hours = batteryWh / batteryPower;
+        const h = Math.floor(hours), m = Math.floor((hours - h) * 60);
+        remainTime = h > 0 ? `${h}h${m}m` : `${m}m`;
+      }
+      const vram = d.vram_usage ? d.vram_usage.toFixed(1) : '--', vramTotal = d.vram_total ? d.vram_total.toFixed(0) : '--';
+      const ram = d.ram_usage ? d.ram_usage.toFixed(1) : '--', ramTotal = d.ram_total ? d.ram_total.toFixed(0) : '--';
+      const cpuName = d.cpu_name || 'CPU', gpuNameVal = d.gpu_name || 'GPU';
+      const frametime = d.frametime > 0 ? d.frametime : (fps > 0 ? 1000 / fps : 6.9);
+      frametimeHistory.shift(); frametimeHistory.push(frametime);
+      const themeColor = getThemeColor();
+
+      // 工具函数
+      const $ = id => document.getElementById(id);
+      const setText = (id, v) => { const e = $(id); if (e) e.textContent = v; };
+      const setHtml = (id, v) => { const e = $(id); if (e) e.innerHTML = v; };
+      const setWidth = (id, v) => { const e = $(id); if (e) e.style.width = v; };
+
+      // 仅更新当前可见的布局（避免每秒更新所有隐藏布局的 DOM）
+      const ramTotalNum = parseFloat(ramTotal) || 32;
+      const isBar = currentVisualStyle === 'bar' || currentVisualStyle === 'bar-trans';
+      const isTrans = currentVisualStyle === 'transparent';
+
+      if (currentMode === 'custom') {
+        // 自定义模式已在上方处理
+      } else if (isBar) {
+        if (currentMode === 'minimal') {
+          setText('bm-fps', fpsDisplay);
+          setText('bm-power', displayPower);
+          updateBarBattery('bm', battery, isAcConnected, isCharging, d.show_battery_always);
+        } else if (currentMode === 'compact') {
+          setText('bc-fps', fpsDisplay);
+          setText('bc-cpu-temp', cpuTemp);
+          setText('bc-gpu-temp', gpuTemp);
+          setText('bc-power', displayPower);
+          updateBarBattery('bc', battery, isAcConnected, isCharging, d.show_battery_always);
+        } else if (currentMode === 'detailed') {
+          setText('bd-fps', fpsDisplay);
+          setText('bd-cpu-temp', cpuTemp);
+          setText('bd-cpu-usage', cpuUsage);
+          setText('bd-cpu-power', cpuPower);
+          setText('bd-gpu-temp', gpuTemp);
+          setText('bd-gpu-usage', gpuUsage);
+          setText('bd-gpu-power', gpuPower);
+          setText('bd-ram', ram);
+          setText('bd-fan', fanSpeed);
+          updateBarBattery('bd', battery, isAcConnected, isCharging, d.show_battery_always);
+          const bdBatPowerContainer = $('bd-bat-power-container');
+          const bdRemainContainer = $('bd-remain-container');
+          if (bdBatPowerContainer) {
+            if (batteryPower > 0.5) {
+              setText('bd-bat-power', `-${batteryPower.toFixed(1)}`);
+              bdBatPowerContainer.style.color = '#f06060';
+              bdBatPowerContainer.style.display = '';
+            } else if (batteryPower < -0.5) {
+              setText('bd-bat-power', `+${(-batteryPower).toFixed(1)}`);
+              bdBatPowerContainer.style.color = '#22c55e';
+              bdBatPowerContainer.style.display = '';
+            } else {
+              bdBatPowerContainer.style.display = 'none';
+            }
+          }
+          if (bdRemainContainer) {
+            if (remainTime !== '--') {
+              setText('bd-remain', remainTime);
+              bdRemainContainer.style.display = '';
+            } else {
+              bdRemainContainer.style.display = 'none';
+            }
+          }
+        }
+      } else if (isTrans) {
+        if (currentMode === 'minimal') {
+          setText('mt-fps', fpsDisplay); setText('mt-power', displayPower); setText('mt-battery', battery);
+          const mtBatIcon = $('mt-bat-icon');
+          if (mtBatIcon) {
+            const mtBatKey = `${isAcConnected}-${isCharging}`;
+            if (mtBatIcon._batKey !== mtBatKey) {
+              mtBatIcon._batKey = mtBatKey;
+              mtBatIcon.innerHTML = isAcConnected ? renderIcon('plug', 12) : renderIcon('battery', 12);
+              if (isCharging) mtBatIcon.classList.add('text-green');
+              else mtBatIcon.classList.remove('text-green');
+            }
+          }
+        } else if (currentMode === 'compact') {
+          setText('ct-fps', fpsDisplay);
+          setText('ct-cpu-temp', cpuTemp);
+          setText('ct-gpu-temp', gpuTemp);
+          setText('ct-power', displayPower);
+          setText('ct-battery', battery);
+          setText('ct-battery-label', isAcConnected ? (isCharging ? 'CHG' : 'AC') : 'BAT');
+          $('ct-cpu-stat')?.classList.toggle('alert', cpuUsage >= 90);
+          $('ct-gpu-stat')?.classList.toggle('alert', gpuUsage >= 90);
+          renderFrametimeGraph('ct-graph', frametimeHistory, themeColor);
+        } else if (currentMode === 'detailed') {
+          setText('dt-fps', fpsDisplay); setText('dt-frametime', `${ft}ms`);
+          setText('dt-gpu-temp', gpuTemp); setText('dt-gpu-power', gpuPower); setText('dt-gpu-usage', gpuUsage);
+          setWidth('dt-gpu-bar', `${gpuUsage}%`);
+          setText('dt-cpu-temp', cpuTemp); setText('dt-cpu-power', cpuPower); setText('dt-cpu-usage', cpuUsage);
+          setWidth('dt-cpu-bar', `${cpuUsage}%`);
+          setText('dt-ram', ram);
+          setWidth('dt-ram-bar', `${(parseFloat(ram) / ramTotalNum) * 100}%`);
+          setText('dt-gpu-name', gpuNameVal); setText('dt-cpu-name', cpuName);
+          setText('dt-fan', (fanSpeed / 1000).toFixed(1));
+          const dtFanIcon = $('dt-fan-icon')?.querySelector('svg');
+          if (dtFanIcon) dtFanIcon.style.animation = fanSpeed > 0 ? `spin ${Math.max(0.1, 1500 / fanSpeed)}s linear infinite` : 'none';
+          setText('dt-power', displayPower);
+          const dtSocEl = $('dt-soc-power');
+          if (dtSocEl) {
+            if (socPower > 0) {
+              dtSocEl.style.display = 'inline';
+              dtSocEl.textContent = `SOC${socPower}W`;
+            } else {
+              dtSocEl.style.display = 'none';
+              dtSocEl.textContent = '';
+            }
+          }
+          setText('dt-battery', battery);
+          updateBatteryIcon($('dt-bat-icon'), battery, isAcConnected, isCharging);
+          const dtBatPower = $('dt-bat-power');
+          const dtRemain = $('dt-remain');
+          if (dtBatPower) {
+            if (batteryPower > 0.5) {
+              dtBatPower.textContent = `-${batteryPower.toFixed(1)}W`;
+              dtBatPower.style.color = '#f06060';
+            } else if (batteryPower < -0.5) {
+              dtBatPower.textContent = `+${(-batteryPower).toFixed(1)}W`;
+              dtBatPower.style.color = '#22c55e';
+            } else {
+              dtBatPower.textContent = '';
+            }
+          }
+          if (dtRemain) {
+            dtRemain.textContent = remainTime !== '--' ? remainTime : '';
+          }
+          renderFrametimeGraph('dt-graph', frametimeHistory, themeColor);
+        }
+      } else {
+        // 实体模式 (solid)
+        if (currentMode === 'minimal') {
+          setText('m-fps', fpsDisplay); setText('m-power', displayPower); setText('m-battery', battery);
+          updateBatteryIcon($('m-bat-icon'), battery, isAcConnected, isCharging);
+        } else if (currentMode === 'compact') {
+          setText('c-fps', fpsDisplay);
+          setHtml('c-cpu-temp', `${cpuTemp}<span class="unit">°C</span>`);
+          setHtml('c-gpu-temp', `${gpuTemp}<span class="unit">°C</span>`);
+          setHtml('c-power', `${displayPower}<span class="unit">W</span>`);
+          setText('c-battery', battery);
+          setText('c-bat-time', updateBatteryTime(battery, isAcConnected, isCharging, totalPower));
+          $('c-charging-icon')?.classList.toggle('hidden', !(isAcConnected && isCharging));
+          renderFrametimeGraph('c-graph', frametimeHistory, themeColor);
+        } else if (currentMode === 'detailed') {
+          setText('d-fps', fpsDisplay); setText('d-frametime', ft);
+          setText('d-gpu-temp', gpuTemp); setText('d-gpu-power', gpuPower); setText('d-gpu-usage', gpuUsage);
+          setWidth('d-gpu-bar', `${gpuUsage}%`); setText('d-vram', vram); setText('d-vram-total', vramTotal);
+          setText('d-cpu-temp', cpuTemp); setText('d-cpu-power', cpuPower); setText('d-cpu-usage', cpuUsage);
+          setWidth('d-cpu-bar', `${cpuUsage}%`); setText('d-fan', fanSpeed);
+          setText('d-ram', ram); setText('d-ram-total', ramTotal);
+          setText('d-cpu-name', cpuName); setText('d-gpu-name', gpuNameVal);
+          setWidth('d-ram-bar', `${(parseFloat(ram) / ramTotalNum) * 100}%`);
+          setHtml('d-fan-rpm', `${(fanSpeed / 1000).toFixed(1)}<span class="unit"> 千转</span>`);
+          const dFanIcon = $('d-fan-icon')?.querySelector('svg');
+          if (dFanIcon) dFanIcon.style.animation = fanSpeed > 0 ? `spin ${Math.max(0.1, 1500 / fanSpeed)}s linear infinite` : 'none';
+          setHtml('d-total-power', `${displayPower}<span class="unit">W</span>`);
+          const dSocEl = $('d-soc-power');
+          if (dSocEl) {
+            if (socPower > 0) {
+              dSocEl.style.display = 'block';
+              dSocEl.textContent = `SOC ${socPower}W`;
+            } else {
+              dSocEl.style.display = 'none';
+              dSocEl.textContent = '';
+            }
+          }
+          setHtml('d-battery', `${battery}<span class="unit">%</span>`);
+          if (batteryPower > 0.5) {
+            setText('d-bat-time', `-${batteryPower.toFixed(1)}W ${remainTime}`);
+          } else if (batteryPower < -0.5) {
+            setText('d-bat-time', `+${(-batteryPower).toFixed(1)}W ${t('charging')}`);
+          } else if (isAcConnected) {
+            setText('d-bat-time', t('ac_connected'));
+          } else {
+            setText('d-bat-time', '--');
+          }
+          $('d-battery-card')?.classList.toggle('charging', isCharging);
+          updateBatteryIcon($('d-bat-icon'), battery, isAcConnected, isCharging);
+          renderFrametimeGraph('d-graph', frametimeHistory, themeColor);
+        }
+      }
+    }
+
+    // ========== 窗口尺寸自动调整 ==========
+    let lastReportedSize = { width: 0, height: 0 };
+    let resizeDebounceTimer = null;
+
+    async function reportContentSize() {
+      // 获取当前可见的 OSD 容器
+      const wrapper = document.getElementById('osd-wrapper');
+      if (!wrapper || wrapper.style.display === 'none') return;
+
+      // 找到当前显示的 OSD 元素（根据 currentVisualStyle 和 currentMode 判断）
+      let visibleOsd = null;
+      const isBarStyle = currentVisualStyle === 'bar' || currentVisualStyle === 'bar-trans';
+
+      if (isBarStyle) {
+        // 横条模式
+        visibleOsd = wrapper.querySelector('.osd-bar-base:not(.hidden)');
+      } else {
+        // 常规模式
+        const selectors = [
+          '#osd-minimal:not(.hidden)',
+          '#osd-minimal-trans:not(.hidden)',
+          '#osd-compact:not(.hidden)',
+          '#osd-compact-trans:not(.hidden)',
+          '#osd-detailed:not(.hidden)',
+          '#osd-detailed-trans:not(.hidden)',
+          '#osd-custom:not(.hidden)'
+        ];
+        for (const sel of selectors) {
+          visibleOsd = wrapper.querySelector(sel);
+          if (visibleOsd) break;
+        }
+      }
+
+      if (!visibleOsd) return;
+
+      // 测量实际内容大小（考虑 wrapper 的 padding）
+      // 使用 scrollWidth/scrollHeight 获取真实内容尺寸（包括溢出部分）
+      // 这样即使内容被 overflow:hidden 裁切，也能测到完整宽度
+      // 注意：需要乘以 devicePixelRatio 转换为物理像素（高 DPI 场景）
+      const dpr = window.devicePixelRatio || 1;
+      const wrapperPadding = 48; // 24px * 2 (来自 .osd-wrapper 的 padding: 24px)
+      const contentWidth = Math.max(visibleOsd.scrollWidth, visibleOsd.getBoundingClientRect().width);
+      const contentHeight = Math.max(visibleOsd.scrollHeight, visibleOsd.getBoundingClientRect().height);
+      const width = Math.ceil((contentWidth + wrapperPadding) * dpr);
+      const height = Math.ceil((contentHeight + wrapperPadding) * dpr);
+
+      // 只有尺寸变化超过 10px 才上报（避免频繁调整）
+      if (Math.abs(width - lastReportedSize.width) < 10 && Math.abs(height - lastReportedSize.height) < 10) {
+        return;
+      }
+
+      lastReportedSize = { width, height };
+
+      try {
+        const { invoke } = window.__TAURI__.core;
+        await invoke('resize_osd_window', { width, height });
+        console.log('[OSD] 窗口大小已调整:', width, 'x', height);
+      } catch (e) {
+        // 静默失败
+      }
+    }
+
+    function scheduleResizeReport() {
+      if (resizeDebounceTimer) clearTimeout(resizeDebounceTimer);
+      resizeDebounceTimer = setTimeout(reportContentSize, 100);
+    }
+
+    // ========== 语言切换 ==========
+    function setLanguage(lang) {
+      if (lang !== 'zh' && lang !== 'en') {
+        // 默认非中文都用英文
+        lang = lang?.startsWith('zh') ? 'zh' : 'en';
+      }
+      if (currentLang === lang) return;
+      currentLang = lang;
+      // 更新所有带 data-i18n 属性的元素
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+      });
+      console.log('[OSD] 语言已切换:', lang);
+    }
+
+    // ========== 事件监听 ==========
+    // 保存 unlisten 函数，供重新初始化时清理
+    let _unlisteners = [];
+    let _timeInterval = null;
+
+    async function setupListeners() {
+      try {
+        // 先清理旧的监听器（防止 init 重复调用导致累积）
+        for (const unlisten of _unlisteners) {
+          try { unlisten(); } catch(_) {}
+        }
+        _unlisteners = [];
+
+        const { listen } = window.__TAURI__.event;
+        _unlisteners.push(await listen('osd-update', e => updateOSD(e.payload)));
+        _unlisteners.push(await listen('osd-mode', e => {
+          setMode(e.payload);
+          // 模式切换后延迟测量（等待 DOM 更新）
+          setTimeout(reportContentSize, 200);
+        }));
+        _unlisteners.push(await listen('osd-theme', e => setTheme(e.payload)));
+        _unlisteners.push(await listen('osd-position', e => setPosition(e.payload)));
+        _unlisteners.push(await listen('osd-scale', e => {
+          setScale(e.payload);
+          // 缩放变化后延迟测量
+          setTimeout(reportContentSize, 200);
+        }));
+        _unlisteners.push(await listen('osd-transparent', e => {
+          // 兼容旧的 osd-transparent 事件
+          setVisualStyle(e.payload ? 'transparent' : 'solid');
+        }));
+        _unlisteners.push(await listen('osd-visual-style', e => {
+          setVisualStyle(e.payload);
+          setTimeout(reportContentSize, 200);
+        }));
+        _unlisteners.push(await listen('osd-language', e => {
+          setLanguage(e.payload);
+        }));
+        _unlisteners.push(await listen('osd-enabled', e => {
+          setOsdEnabled(e.payload);
+          if (e.payload) setTimeout(reportContentSize, 300);
+        }));
+        _unlisteners.push(await listen('osd-desktop-mode', e => {
+          setDesktopMode(e.payload);
+        }));
+        _unlisteners.push(await listen('osd-custom-items', e => {
+          setCustomItems(e.payload);
+        }));
+        console.log('[OSD] 事件监听器已设置');
+      } catch (e) {
+        console.error('[OSD] 设置监听器失败:', e);
+      }
+    }
+
+    // ========== 初始化 ==========
+    async function _onVisibilityChange() {
+      if (document.visibilityState === 'visible') {
+        try {
+          const { invoke } = window.__TAURI__.core;
+          await invoke('refresh_osd_click_through');
+        } catch (e) {
+          // 忽略错误
+        }
+      }
+    }
+
+    async function init() {
+      initOSD();
+      updateTime();
+      // 清理旧 interval 防止重复调用 init 时累积
+      if (_timeInterval !== null) clearInterval(_timeInterval);
+      _timeInterval = setInterval(updateTime, 1000);
+      setMode('compact');
+      await setupListeners();
+
+      // 监听窗口可见性变化，重新应用鼠标穿透设置（使用命名函数避免累积）
+      document.removeEventListener('visibilitychange', _onVisibilityChange);
+      document.addEventListener('visibilitychange', _onVisibilityChange);
+
+      // WebView 加载完成后通知后端显示窗口，避免白屏闪烁
+      try {
+        const { invoke } = window.__TAURI__.core;
+
+        // 先从 settings 读取保存的 OSD 设置（解决样式不持久化问题）
+        const settings = await invoke('load_settings');
+        if (settings) {
+          // 应用保存的语言设置
+          if (settings.language) {
+            setLanguage(settings.language);
+            console.log('[OSD] 恢复语言:', settings.language);
+          }
+          // 应用保存的视觉样式
+          if (settings.osd_visual_style === 'transparent' || settings.osd_visual_style === 'solid' || settings.osd_visual_style === 'bar' || settings.osd_visual_style === 'bar-trans') {
+            setVisualStyle(settings.osd_visual_style);
+            console.log('[OSD] 恢复视觉样式:', settings.osd_visual_style);
+          }
+          // 应用保存的显示模式
+          if (settings.osd_display_mode === 'minimal' || settings.osd_display_mode === 'compact' || settings.osd_display_mode === 'detailed' || settings.osd_display_mode === 'custom') {
+            setMode(settings.osd_display_mode);
+            console.log('[OSD] 恢复显示模式:', settings.osd_display_mode);
+          }
+          // 应用保存的自定义项目
+          if (Array.isArray(settings.osd_custom_items) && settings.osd_custom_items.length > 0) {
+            setCustomItems(settings.osd_custom_items);
+            console.log('[OSD] 恢复自定义项目:', settings.osd_custom_items);
+          }
+          // 应用保存的主题
+          if (['neon', 'sunset', 'frost', 'crimson', 'gold', 'lavender'].includes(settings.osd_theme)) {
+            setTheme(settings.osd_theme);
+            console.log('[OSD] 恢复主题:', settings.osd_theme);
+          }
+          // 应用保存的位置
+          if (settings.osd_position === 'top-left' || settings.osd_position === 'top-right' || settings.osd_position === 'bottom-left' || settings.osd_position === 'bottom-right') {
+            setPosition(settings.osd_position);
+            // 同步到后端，确保 OSD_POSITION_CORNER 被正确初始化
+            await invoke('set_osd_position_corner', { position: settings.osd_position });
+            console.log('[OSD] 恢复位置:', settings.osd_position);
+          }
+          // 应用保存的缩放
+          if (typeof settings.osd_scale === 'number') {
+            setScale(settings.osd_scale);
+            console.log('[OSD] 恢复缩放:', settings.osd_scale);
+          }
+          // 应用常驻桌面模式
+          if (typeof settings.osd_desktop_mode === 'boolean') {
+            setDesktopMode(settings.osd_desktop_mode);
+            console.log('[OSD] 恢复常驻桌面模式:', settings.osd_desktop_mode);
+          }
+        }
+
+        await invoke('show_osd_window');
+        console.log('[OSD] 窗口已显示');
+        // 主动查询 OSD 启用状态（解决事件丢失问题）
+        const enabled = await invoke('get_osd_enabled');
+        setOsdEnabled(enabled);
+        console.log('[OSD] 初始化状态:', enabled);
+      } catch (e) {
+        console.error('[OSD] 初始化失败:', e);
+      }
+    }
+    init();
+  </script>
+</body>
+
+</html>

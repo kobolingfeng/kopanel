@@ -1,0 +1,4487 @@
+/* 全局样式重置与基础变量 */
+:root {
+  /* 尺寸系统 - 窗口本身就是侧边栏大小，所以这里用 100% */
+  --panel-width: 100%;
+
+  --base-font-size: clamp(12px, 1.2vw, 15px);
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+
+  /* SteamOS 风格配色 - 默认主题 */
+  --bg-root: transparent;
+  /* 整体背景渐变 #1b2838 -> #0e1419 */
+  --bg-gradient-start: #1b2838;
+  --bg-gradient-end: #0e1419;
+
+  /* 组件背景 */
+  --bg-item: rgba(30, 35, 41, 0.6);
+  /* #1e2329 / 60% */
+  --bg-item-focus: rgba(30, 35, 41, 0.9);
+  /* #1e2329 / 90% */
+
+  /* 文本颜色 */
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  /* gray-400 */
+  --text-muted: #6b7280;
+  /* gray-500 */
+
+  /* 边框颜色 */
+  --border-color: rgba(61, 68, 80, 0.3);
+  /* #3d4450 / 30% */
+
+  /* 强调色 - Steam Blue */
+  --accent-color: #66c0f4;
+  --accent-glow: rgba(102, 192, 244, 0.4);
+  --accent-glow-strong: rgba(102, 192, 244, 0.6);
+
+  /* 圆角 */
+  --radius-lg: 12px;
+  /* rounded-xl */
+  --radius-full: 9999px;
+
+  /* 阴影 */
+  --shadow-focus: 0 0 15px rgba(102, 192, 244, 0.3);
+}
+
+/* ====== 配色主题 ====== */
+
+/* 深蓝主题 (Steam 风格 - 默认) */
+[data-theme="steam"] {
+  --bg-gradient-start: #1b2838;
+  --bg-gradient-end: #0e1419;
+  --bg-item: rgba(30, 35, 41, 0.6);
+  --bg-item-focus: rgba(30, 35, 41, 0.9);
+  --border-color: rgba(61, 68, 80, 0.3);
+  --accent-color: #66c0f4;
+  --accent-glow: rgba(102, 192, 244, 0.4);
+  --accent-glow-strong: rgba(102, 192, 244, 0.6);
+  --shadow-focus: 0 0 15px rgba(102, 192, 244, 0.3);
+}
+
+/* 暗夜紫 */
+[data-theme="purple"] {
+  --bg-gradient-start: #1e1b2e;
+  --bg-gradient-end: #12101a;
+  --bg-item: rgba(35, 30, 50, 0.6);
+  --bg-item-focus: rgba(35, 30, 50, 0.9);
+  --border-color: rgba(80, 61, 100, 0.3);
+  --accent-color: #a78bfa;
+  --accent-glow: rgba(167, 139, 250, 0.4);
+  --accent-glow-strong: rgba(167, 139, 250, 0.6);
+  --shadow-focus: 0 0 15px rgba(167, 139, 250, 0.3);
+}
+
+/* 赛博绿 */
+[data-theme="cyber"] {
+  --bg-gradient-start: #0d1f1a;
+  --bg-gradient-end: #050e0b;
+  --bg-item: rgba(20, 45, 35, 0.6);
+  --bg-item-focus: rgba(20, 45, 35, 0.9);
+  --border-color: rgba(34, 197, 94, 0.2);
+  --accent-color: #22c55e;
+  --accent-glow: rgba(34, 197, 94, 0.4);
+  --accent-glow-strong: rgba(34, 197, 94, 0.6);
+  --shadow-focus: 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+/* 烈焰红 */
+[data-theme="fire"] {
+  --bg-gradient-start: #1f1210;
+  --bg-gradient-end: #0e0908;
+  --bg-item: rgba(45, 25, 20, 0.6);
+  --bg-item-focus: rgba(45, 25, 20, 0.9);
+  --border-color: rgba(239, 68, 68, 0.2);
+  --accent-color: #f87171;
+  --accent-glow: rgba(248, 113, 113, 0.4);
+  --accent-glow-strong: rgba(248, 113, 113, 0.6);
+  --shadow-focus: 0 0 15px rgba(248, 113, 113, 0.3);
+}
+
+/* 琥珀金 */
+[data-theme="amber"] {
+  --bg-gradient-start: #1c1810;
+  --bg-gradient-end: #0d0b08;
+  --bg-item: rgba(40, 35, 20, 0.6);
+  --bg-item-focus: rgba(40, 35, 20, 0.9);
+  --border-color: rgba(245, 158, 11, 0.2);
+  --accent-color: #fbbf24;
+  --accent-glow: rgba(251, 191, 36, 0.4);
+  --accent-glow-strong: rgba(251, 191, 36, 0.6);
+  --shadow-focus: 0 0 15px rgba(251, 191, 36, 0.3);
+}
+
+/* 冰蓝 */
+[data-theme="ice"] {
+  --bg-gradient-start: #101820;
+  --bg-gradient-end: #080c10;
+  --bg-item: rgba(20, 30, 45, 0.6);
+  --bg-item-focus: rgba(20, 30, 45, 0.9);
+  --border-color: rgba(56, 189, 248, 0.2);
+  --accent-color: #38bdf8;
+  --accent-glow: rgba(56, 189, 248, 0.4);
+  --accent-glow-strong: rgba(56, 189, 248, 0.6);
+  --shadow-focus: 0 0 15px rgba(56, 189, 248, 0.3);
+}
+
+/* 樱花粉 */
+[data-theme="sakura"] {
+  --bg-gradient-start: #1f181c;
+  --bg-gradient-end: #0e0c0d;
+  --bg-item: rgba(45, 30, 35, 0.6);
+  --bg-item-focus: rgba(45, 30, 35, 0.9);
+  --border-color: rgba(244, 114, 182, 0.2);
+  --accent-color: #f472b6;
+  --accent-glow: rgba(244, 114, 182, 0.4);
+  --accent-glow-strong: rgba(244, 114, 182, 0.6);
+  --shadow-focus: 0 0 15px rgba(244, 114, 182, 0.3);
+}
+
+/* ====== 浅色主题 ====== */
+
+/* 纯净白 */
+[data-theme="light"] {
+  --bg-gradient-start: #f8fafc;
+  --bg-gradient-end: #e2e8f0;
+  --bg-item: rgba(255, 255, 255, 0.8);
+  --bg-item-focus: rgba(255, 255, 255, 0.95);
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-color: rgba(148, 163, 184, 0.3);
+  --accent-color: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.3);
+  --accent-glow-strong: rgba(59, 130, 246, 0.5);
+  --shadow-focus: 0 0 15px rgba(59, 130, 246, 0.25);
+}
+
+/* 暖阳米 */
+[data-theme="cream"] {
+  --bg-gradient-start: #fefce8;
+  --bg-gradient-end: #fef3c7;
+  --bg-item: rgba(255, 251, 235, 0.85);
+  --bg-item-focus: rgba(255, 251, 235, 0.98);
+  --text-primary: #422006;
+  --text-secondary: #78350f;
+  --text-muted: #a16207;
+  --border-color: rgba(217, 119, 6, 0.2);
+  --accent-color: #d97706;
+  --accent-glow: rgba(217, 119, 6, 0.3);
+  --accent-glow-strong: rgba(217, 119, 6, 0.5);
+  --shadow-focus: 0 0 15px rgba(217, 119, 6, 0.25);
+}
+
+/* 淡雅紫 */
+[data-theme="lavender"] {
+  --bg-gradient-start: #faf5ff;
+  --bg-gradient-end: #f3e8ff;
+  --bg-item: rgba(250, 245, 255, 0.85);
+  --bg-item-focus: rgba(250, 245, 255, 0.98);
+  --text-primary: #3b0764;
+  --text-secondary: #6b21a8;
+  --text-muted: #a855f7;
+  --border-color: rgba(168, 85, 247, 0.2);
+  --accent-color: #9333ea;
+  --accent-glow: rgba(147, 51, 234, 0.3);
+  --accent-glow-strong: rgba(147, 51, 234, 0.5);
+  --shadow-focus: 0 0 15px rgba(147, 51, 234, 0.25);
+}
+
+/* 清新绿 */
+[data-theme="mint"] {
+  --bg-gradient-start: #ecfdf5;
+  --bg-gradient-end: #d1fae5;
+  --bg-item: rgba(236, 253, 245, 0.85);
+  --bg-item-focus: rgba(236, 253, 245, 0.98);
+  --text-primary: #064e3b;
+  --text-secondary: #047857;
+  --text-muted: #10b981;
+  --border-color: rgba(16, 185, 129, 0.2);
+  --accent-color: #059669;
+  --accent-glow: rgba(5, 150, 105, 0.3);
+  --accent-glow-strong: rgba(5, 150, 105, 0.5);
+  --shadow-focus: 0 0 15px rgba(5, 150, 105, 0.25);
+}
+
+/* 蓝天白云 */
+[data-theme="sky"] {
+  --bg-gradient-start: #f0f9ff;
+  --bg-gradient-end: #e0f2fe;
+  --bg-item: rgba(240, 249, 255, 0.85);
+  --bg-item-focus: rgba(240, 249, 255, 0.98);
+  --text-primary: #0c4a6e;
+  --text-secondary: #0369a1;
+  --text-muted: #0ea5e9;
+  --border-color: rgba(14, 165, 233, 0.2);
+  --accent-color: #0284c7;
+  --accent-glow: rgba(2, 132, 199, 0.3);
+  --accent-glow-strong: rgba(2, 132, 199, 0.5);
+  --shadow-focus: 0 0 15px rgba(2, 132, 199, 0.25);
+}
+
+/* 玫瑰粉 */
+[data-theme="rose"] {
+  --bg-gradient-start: #fff1f2;
+  --bg-gradient-end: #ffe4e6;
+  --bg-item: rgba(255, 241, 242, 0.85);
+  --bg-item-focus: rgba(255, 241, 242, 0.98);
+  --text-primary: #881337;
+  --text-secondary: #be123c;
+  --text-muted: #f43f5e;
+  --border-color: rgba(244, 63, 94, 0.2);
+  --accent-color: #e11d48;
+  --accent-glow: rgba(225, 29, 72, 0.3);
+  --accent-glow-strong: rgba(225, 29, 72, 0.5);
+  --shadow-focus: 0 0 15px rgba(225, 29, 72, 0.25);
+}
+
+/* 机甲翠 - Mech Emerald */
+[data-theme="mech_green"] {
+  --bg-gradient-start: #020617;
+  /* slate-950 */
+  --bg-gradient-end: #0f172a;
+  /* slate-900 */
+  --bg-item: rgba(15, 23, 42, 0.6);
+  /* slate-900 / 60% */
+  --bg-item-focus: rgba(30, 41, 59, 0.9);
+  /* slate-800 */
+  --text-primary: #f8fafc;
+  /* slate-50 */
+  --text-secondary: #94a3b8;
+  /* slate-400 */
+  --text-muted: #64748b;
+  /* slate-500 */
+  --border-color: rgba(52, 211, 153, 0.2);
+  /* emerald-400 / 20% */
+  --accent-color: #34d399;
+  /* emerald-400 */
+  --accent-glow: rgba(52, 211, 153, 0.4);
+  --accent-glow-strong: rgba(52, 211, 153, 0.6);
+  --shadow-focus: 0 0 15px rgba(52, 211, 153, 0.4);
+
+  /* 特殊变量 */
+  --text-highlight: #d1fae5;
+  /* emerald-100 */
+  --accent-dim: rgba(6, 78, 59, 0.5);
+  /* emerald-900/50 */
+  --accent-subtle: rgba(52, 211, 153, 0.05);
+
+  /* 特殊覆盖变量 */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+}
+
+/* 赛博金 - Cyber Gold */
+[data-theme="mech_gold"] {
+  --bg-gradient-start: #0c0a09;
+  /* stone-950 */
+  --bg-gradient-end: #1c1917;
+  /* stone-900 */
+  --bg-item: rgba(28, 25, 23, 0.6);
+  /* stone-900 / 60% */
+  --bg-item-focus: rgba(41, 37, 36, 0.9);
+  /* stone-800 */
+  --text-primary: #fafaf9;
+  /* stone-50 */
+  --text-secondary: #a8a29e;
+  /* stone-400 */
+  --text-muted: #78716c;
+  /* stone-500 */
+  --border-color: rgba(251, 191, 36, 0.2);
+  /* amber-400 / 20% */
+  --accent-color: #fbbf24;
+  /* amber-400 */
+  --accent-glow: rgba(251, 191, 36, 0.4);
+  --accent-glow-strong: rgba(251, 191, 36, 0.6);
+  --shadow-focus: 0 0 15px rgba(251, 191, 36, 0.4);
+
+  /* 特殊变量 */
+  --text-highlight: #fef3c7;
+  /* amber-100 */
+  --accent-dim: rgba(120, 53, 15, 0.5);
+  /* amber-900/50 */
+  --accent-subtle: rgba(251, 191, 36, 0.05);
+
+  /* 特殊覆盖变量 */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+}
+
+/* 霓虹紫 - Neon Purple */
+[data-theme="mech_purple"] {
+  --bg-gradient-start: #05020a;
+  /* almost black violet */
+  --bg-gradient-end: #1e0844;
+  /* deep violet */
+  --bg-item: rgba(20, 10, 35, 0.7);
+  --bg-item-focus: rgba(45, 15, 70, 0.9);
+
+  /* Text colors: Neutral Grey/White to contrast with Purple Accent */
+  --text-primary: #f3f4f6;
+  /* gray-100 */
+  --text-secondary: #9ca3af;
+  /* gray-400 */
+  --text-muted: #6b7280;
+  /* gray-500 */
+
+  --border-color: rgba(217, 70, 239, 0.3);
+  --accent-color: #d946ef;
+  /* fuchsia-500 */
+  --accent-glow: rgba(217, 70, 239, 0.5);
+  --accent-glow-strong: rgba(217, 70, 239, 0.8);
+  --shadow-focus: 0 0 20px rgba(217, 70, 239, 0.5);
+
+  /* Special */
+  --text-highlight: #f5d0fe;
+  /* fuchsia-200 - Only use color for highlighting */
+  --accent-dim: rgba(58, 10, 95, 0.8);
+  --accent-subtle: rgba(217, 70, 239, 0.08);
+
+  /* Special overrides */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+}
+
+/* 朋克蓝 - Punk Blue */
+[data-theme="mech_blue"] {
+  --bg-gradient-start: #000000;
+  /* black */
+  --bg-gradient-end: #0a1025;
+  /* very deep blue */
+  --bg-item: rgba(10, 15, 30, 0.7);
+  --bg-item-focus: rgba(20, 35, 75, 0.9);
+
+  /* Text colors: Slate Grey to contrast with Blue Accent (Matches Mecha Green style) */
+  --text-primary: #f8fafc;
+  /* slate-50 */
+  --text-secondary: #94a3b8;
+  /* slate-400 */
+  --text-muted: #64748b;
+  /* slate-500 */
+
+  --border-color: rgba(56, 189, 248, 0.3);
+  --accent-color: #38bdf8;
+  /* sky-400 */
+  --accent-glow: rgba(56, 189, 248, 0.5);
+  --accent-glow-strong: rgba(56, 189, 248, 0.8);
+  --shadow-focus: 0 0 20px rgba(56, 189, 248, 0.5);
+
+  /* Special */
+  --text-highlight: #e0f2fe;
+  /* sky-100 */
+  --accent-dim: rgba(8, 40, 80, 0.8);
+  --accent-subtle: rgba(56, 189, 248, 0.08);
+
+  /* Special overrides */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+}
+
+/* 星际白 - Interstellar White */
+[data-theme="mech_white"] {
+  --bg-gradient-start: #050505;
+  /* almost black */
+  --bg-gradient-end: #18181b;
+  /* zinc-900 */
+  --bg-item: rgba(20, 20, 22, 0.7);
+  --bg-item-focus: rgba(50, 50, 55, 0.9);
+
+  /* Text colors: Darker Zinc Grey to contrast with Pure White Accent */
+  --text-primary: #e4e4e7;
+  /* zinc-200 */
+  --text-secondary: #a1a1aa;
+  /* zinc-400 */
+  --text-muted: #71717a;
+  /* zinc-500 */
+
+  --border-color: rgba(255, 255, 255, 0.3);
+  --accent-color: #ffffff;
+  /* pure white */
+  --accent-glow: rgba(255, 255, 255, 0.5);
+  --accent-glow-strong: rgba(255, 255, 255, 0.8);
+  --shadow-focus: 0 0 20px rgba(255, 255, 255, 0.5);
+
+  /* Special */
+  --text-highlight: #ffffff;
+  --accent-dim: rgba(255, 255, 255, 0.1);
+  --accent-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Special overrides */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+}
+
+/* 故障红 - Glitch Red */
+[data-theme="mech_red"] {
+  --bg-gradient-start: #000000;
+  /* pure black */
+  --bg-gradient-end: #1a0505;
+  /* deep blood red */
+  --bg-item: rgba(25, 5, 5, 0.7);
+  --bg-item-focus: rgba(50, 10, 10, 0.9);
+
+  /* Text colors: Neutral Grey/White (NO red tint, for contrast) */
+  --text-primary: #fafafa;
+  /* zinc-50 */
+  --text-secondary: #d4d4d8;
+  /* zinc-300 */
+  --text-muted: #71717a;
+  /* zinc-500 */
+
+  --border-color: rgba(239, 68, 68, 0.4);
+  /* red-500 */
+  --accent-color: #ff003c;
+  /* vibrant glitch red */
+  --accent-glow: rgba(255, 0, 60, 0.5);
+  --accent-glow-strong: rgba(255, 0, 60, 0.8);
+  --shadow-focus: 0 0 20px rgba(255, 0, 60, 0.6);
+
+  /* Special */
+  --text-highlight: #ffffff;
+  --accent-dim: rgba(80, 5, 20, 0.8);
+  --accent-subtle: rgba(255, 0, 60, 0.1);
+
+  /* Special overrides */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+}
+
+/* ====== 二次元主题 (Anime Series) ====== */
+
+/* 魔法少女 - Magical Girl Pink */
+[data-theme="anime_pink"] {
+  --bg-gradient-start: #1a0a14;
+  /* deep rose-black */
+  --bg-gradient-end: #2a1020;
+  /* warm dark magenta */
+  --bg-item: rgba(40, 18, 30, 0.65);
+  --bg-item-focus: rgba(55, 25, 42, 0.9);
+
+  --text-primary: #fce4ec;
+  /* pink-50 */
+  --text-secondary: #f8bbd0;
+  /* pink-100 */
+  --text-muted: #f48fb1;
+  /* pink-200 */
+
+  --border-color: rgba(255, 128, 171, 0.25);
+  --accent-color: #ff80ab;
+  /* pink A100 */
+  --accent-glow: rgba(255, 128, 171, 0.45);
+  --accent-glow-strong: rgba(255, 128, 171, 0.7);
+  --shadow-focus: 0 0 20px rgba(255, 128, 171, 0.4), 0 0 40px rgba(255, 128, 171, 0.15);
+
+  /* Special */
+  --text-highlight: #fce4ec;
+  --accent-dim: rgba(136, 14, 79, 0.5);
+  --accent-subtle: rgba(255, 128, 171, 0.06);
+
+  /* Anime-style round corners */
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-full: 9999px;
+}
+
+/* 天空之城 - Anime Sky Blue */
+[data-theme="anime_blue"] {
+  --bg-gradient-start: #0a0e1a;
+  /* deep navy */
+  --bg-gradient-end: #121830;
+  /* midnight blue */
+  --bg-item: rgba(15, 22, 45, 0.65);
+  --bg-item-focus: rgba(22, 35, 65, 0.9);
+
+  --text-primary: #e3f2fd;
+  /* blue-50 */
+  --text-secondary: #90caf9;
+  /* blue-200 */
+  --text-muted: #64b5f6;
+  /* blue-300 */
+
+  --border-color: rgba(100, 181, 246, 0.25);
+  --accent-color: #82b1ff;
+  /* blue A100 */
+  --accent-glow: rgba(130, 177, 255, 0.45);
+  --accent-glow-strong: rgba(130, 177, 255, 0.7);
+  --shadow-focus: 0 0 20px rgba(130, 177, 255, 0.4), 0 0 40px rgba(130, 177, 255, 0.15);
+
+  /* Special */
+  --text-highlight: #e3f2fd;
+  --accent-dim: rgba(13, 71, 161, 0.5);
+  --accent-subtle: rgba(130, 177, 255, 0.06);
+
+  /* Anime-style round corners */
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-full: 9999px;
+}
+
+/* 星夜紫 - Starlight Violet */
+[data-theme="anime_violet"] {
+  --bg-gradient-start: #0e0815;
+  /* deep violet-black */
+  --bg-gradient-end: #1a1028;
+  /* dark purple */
+  --bg-item: rgba(25, 15, 40, 0.65);
+  --bg-item-focus: rgba(38, 22, 60, 0.9);
+
+  --text-primary: #f3e5f5;
+  /* purple-50 */
+  --text-secondary: #ce93d8;
+  /* purple-200 */
+  --text-muted: #ba68c8;
+  /* purple-300 */
+
+  --border-color: rgba(186, 104, 200, 0.25);
+  --accent-color: #ea80fc;
+  /* purple A100 */
+  --accent-glow: rgba(234, 128, 252, 0.45);
+  --accent-glow-strong: rgba(234, 128, 252, 0.7);
+  --shadow-focus: 0 0 20px rgba(234, 128, 252, 0.4), 0 0 40px rgba(234, 128, 252, 0.15);
+
+  /* Special */
+  --text-highlight: #f3e5f5;
+  --accent-dim: rgba(74, 20, 140, 0.5);
+  --accent-subtle: rgba(234, 128, 252, 0.06);
+
+  /* Anime-style round corners */
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-full: 9999px;
+}
+
+/* 夕暮珊瑚 - Sunset Coral */
+[data-theme="anime_coral"] {
+  --bg-gradient-start: #1a0e0a;
+  /* deep warm brown-black */
+  --bg-gradient-end: #2a1810;
+  /* dark coral-brown */
+  --bg-item: rgba(40, 22, 15, 0.65);
+  --bg-item-focus: rgba(55, 30, 20, 0.9);
+
+  --text-primary: #fff3e0;
+  /* orange-50 */
+  --text-secondary: #ffcc80;
+  /* orange-200 */
+  --text-muted: #ffb74d;
+  /* orange-300 */
+
+  --border-color: rgba(255, 138, 101, 0.25);
+  --accent-color: #ff8a65;
+  /* deep-orange-300 */
+  --accent-glow: rgba(255, 138, 101, 0.45);
+  --accent-glow-strong: rgba(255, 138, 101, 0.7);
+  --shadow-focus: 0 0 20px rgba(255, 138, 101, 0.4), 0 0 40px rgba(255, 138, 101, 0.15);
+
+  /* Special */
+  --text-highlight: #fff3e0;
+  --accent-dim: rgba(191, 54, 12, 0.5);
+  --accent-subtle: rgba(255, 138, 101, 0.06);
+
+  /* Anime-style round corners */
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-full: 9999px;
+}
+
+
+
+/* ====== 浅色主题通用覆盖样式 ====== */
+[data-theme="light"],
+[data-theme="cream"],
+[data-theme="lavender"],
+[data-theme="mint"],
+[data-theme="sky"],
+[data-theme="rose"] {
+  /* 状态监控栏 */
+  --status-bg: rgba(0, 0, 0, 0.05);
+  /* 聚焦项背景 */
+  --focus-bg: rgba(0, 0, 0, 0.08);
+  /* 底部栏 */
+  --footer-bg: rgba(0, 0, 0, 0.05);
+  /* 滑块轨道 */
+  --slider-track-bg: rgba(0, 0, 0, 0.1);
+  /* 分隔线 */
+  --divider-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 媒体查询适配 - 掌机多分辨率支持 */
+/* 注意：高DPI用户（缩放>100%）CSS视口会变小，但物理分辨率够大，不需要过度收缩 */
+
+/* 1080p 及以下（排除高DPI缩放用户） */
+@media screen and (max-width: 1920px) and (-webkit-max-device-pixel-ratio: 1.25), 
+       screen and (max-width: 1920px) and (max-resolution: 120dpi) {
+  :root {
+    --base-font-size: 13px;
+  }
+}
+
+/* 900p / 1600x900（排除高DPI缩放用户） */
+@media screen and (max-width: 1600px) and (-webkit-max-device-pixel-ratio: 1.25), 
+       screen and (max-width: 1600px) and (max-resolution: 120dpi) {
+  :root {
+    --base-font-size: 12px;
+  }
+}
+
+/* 800p / 1280x800（排除高DPI缩放用户） */
+@media screen and (max-width: 1280px) and (-webkit-max-device-pixel-ratio: 1.25), 
+       screen and (max-width: 1280px) and (max-resolution: 120dpi) {
+  :root {
+    --base-font-size: 11px;
+  }
+
+  .status-overview {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .perf-monitor-grid {
+    padding: 12px 14px;
+    gap: 8px 12px;
+  }
+
+  .perf-label {
+    font-size: calc(10px * var(--font-scale, 1));
+  }
+
+  .perf-value {
+    font-size: calc(16px * var(--font-scale, 1));
+  }
+
+  .section-title {
+    font-size: calc(11px * var(--font-scale, 1));
+    margin: 12px 0 8px;
+  }
+
+  .list-item {
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .item-title {
+    font-size: calc(12px * var(--font-scale, 1));
+    gap: 8px;
+  }
+
+  .item-value {
+    font-size: calc(14px * var(--font-scale, 1));
+  }
+
+  .slider-track {
+    height: 6px;
+  }
+
+  .slider-thumb {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* 720p / 1280x720 或更小（排除高DPI缩放用户） */
+@media screen and (max-height: 720px) and (-webkit-max-device-pixel-ratio: 1.25), 
+       screen and (max-height: 720px) and (max-resolution: 120dpi) {
+  :root {
+    --base-font-size: 10px;
+  }
+
+  .tab-bar {
+    padding: 16px 12px 12px;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+
+  .tab-icon-wrapper {
+    padding: 6px;
+  }
+
+  .tab-label {
+    font-size: calc(9px * var(--font-scale, 1));
+  }
+
+  .status-overview {
+    padding: 10px 12px;
+    gap: 10px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .perf-monitor-grid {
+    padding: 10px 12px;
+    gap: 6px 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+
+  .perf-label {
+    font-size: calc(9px * var(--font-scale, 1));
+  }
+
+  .perf-value {
+    font-size: calc(14px * var(--font-scale, 1));
+  }
+
+  .status-label {
+    font-size: calc(9px * var(--font-scale, 1));
+  }
+
+  .status-value {
+    font-size: calc(12px * var(--font-scale, 1));
+  }
+
+  .section-title {
+    font-size: calc(10px * var(--font-scale, 1));
+    margin: 10px 0 6px;
+  }
+
+  .list-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+  }
+
+  .item-header {
+    margin-bottom: 8px;
+  }
+
+  .item-title {
+    font-size: calc(11px * var(--font-scale, 1));
+    gap: 6px;
+  }
+
+  .item-title svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .item-value {
+    font-size: calc(12px * var(--font-scale, 1));
+  }
+
+  .item-description {
+    font-size: calc(10px * var(--font-scale, 1));
+  }
+
+  .slider-track {
+    height: 5px;
+    margin-top: 6px;
+  }
+
+  .slider-thumb {
+    width: 12px;
+    height: 12px;
+  }
+
+  .slider-labels {
+    font-size: calc(9px * var(--font-scale, 1));
+    margin-top: 4px;
+  }
+
+  .stepper-row {
+    gap: 6px;
+  }
+
+  .stepper-item {
+    padding: 6px 8px;
+  }
+
+  .stepper-label {
+    font-size: calc(10px * var(--font-scale, 1));
+  }
+
+  .toggle-switch {
+    width: 36px;
+    height: 18px;
+  }
+
+  .toggle-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .mode-row {
+    gap: 6px;
+  }
+
+  .mode-item {
+    padding: 8px 10px;
+  }
+
+  .hint-text {
+    font-size: calc(9px * var(--font-scale, 1));
+  }
+
+  .divider {
+    margin: 10px 0;
+  }
+
+  .action-hint {
+    font-size: calc(9px * var(--font-scale, 1));
+    padding: 2px 6px;
+  }
+
+  .content-body {
+    padding: 12px 14px;
+  }
+
+  /* 网格布局紧凑化 */
+  .shortcuts-grid-compact {
+    gap: 6px;
+  }
+
+  .shortcut-item-compact {
+    padding: 8px 10px;
+  }
+
+  .shortcut-item-compact .item-title {
+    font-size: calc(11px * var(--font-scale, 1));
+    gap: 6px;
+  }
+
+  .shortcut-item-compact svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+
+  .shortcut-command {
+    font-size: calc(8px * var(--font-scale, 1));
+    padding: 1px 4px;
+  }
+
+  .game-grid {
+    gap: 8px;
+  }
+
+  .game-name {
+    font-size: calc(9px * var(--font-scale, 1));
+    padding: 4px;
+  }
+
+  .optimize-grid {
+    gap: 6px;
+  }
+
+  .optimize-card {
+    padding: 8px 10px;
+    min-height: 36px;
+  }
+
+  .optimize-card .card-title {
+    font-size: calc(11px * var(--font-scale, 1));
+  }
+
+  /* 箭头式 Stepper 紧凑化 */
+  .arrow-stepper {
+    gap: 8px;
+    padding: 6px 0;
+  }
+
+  .arrow-stepper-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .arrow-stepper-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .arrow-stepper-value {
+    font-size: calc(12px * var(--font-scale, 1));
+    min-width: 80px;
+  }
+}
+
+/* 超小屏幕 / 窗口高度小于 600px（排除高DPI缩放用户） */
+@media screen and (max-height: 600px) and (-webkit-max-device-pixel-ratio: 1.25), 
+       screen and (max-height: 600px) and (max-resolution: 120dpi) {
+  :root {
+    --base-font-size: 9px;
+  }
+
+  .tab-bar {
+    padding: 12px 10px 10px;
+    gap: 10px;
+  }
+
+  .tab-icon-wrapper {
+    padding: 5px;
+  }
+
+  .tab-icon-wrapper svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .tab-label {
+    font-size: calc(8px * var(--font-scale, 1));
+  }
+
+  .status-overview {
+    padding: 8px 10px;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .perf-monitor-grid {
+    padding: 8px 10px;
+    gap: 4px 8px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+  }
+
+  .perf-label {
+    font-size: calc(8px * var(--font-scale, 1));
+  }
+
+  .perf-value {
+    font-size: calc(12px * var(--font-scale, 1));
+  }
+
+  .section-title {
+    font-size: calc(9px * var(--font-scale, 1));
+    margin: 8px 0 4px;
+  }
+
+  .list-item {
+    padding: 8px;
+    margin-bottom: 6px;
+  }
+
+  .item-header {
+    margin-bottom: 6px;
+  }
+
+  .item-title {
+    font-size: calc(10px * var(--font-scale, 1));
+  }
+
+  .content-body {
+    padding: 10px 12px;
+  }
+
+  /* 箭头式 Stepper 更紧凑 */
+  .arrow-stepper {
+    gap: 6px;
+    padding: 4px 0;
+  }
+
+  .arrow-stepper-btn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .arrow-stepper-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .arrow-stepper-value {
+    font-size: calc(11px * var(--font-scale, 1));
+    min-width: 70px;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-size: calc(var(--base-font-size) * var(--font-scale, 1));
+  color: var(--text-primary);
+  background: transparent !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 确保根元素完全透明 */
+#app {
+  background: transparent !important;
+}
+
+/* 自定义滚动条 - 移植自原版 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: clamp(4px, 0.5vw, 6px);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(61, 68, 80, 0.2);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(102, 192, 244, 0.4);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 192, 244, 0.6);
+}
+
+/* 动画工具类 - 已禁用，瞬发显示 */
+.fade-enter,
+.animate-fade-in {
+  animation: none;
+}
+
+/* 危险操作颜色 */
+:root {
+  --color-danger: #ef4444;
+}
+
+/* 聚焦状态 */
+.list-item.focused,
+.game-card.focused {
+  background: rgba(30, 35, 41, 0.9) !important;
+  border-color: var(--accent-color) !important;
+  color: white !important;
+  transform: scale(1.02);
+  box-shadow: var(--shadow-focus);
+  z-index: 10;
+}
+
+/* 状态概览 */
+.status-overview {
+  background: rgba(30, 35, 41, 0.6);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(61, 68, 80, 0.2);
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.status-item.right {
+  margin-left: auto;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.status-label {
+  font-size: calc(10px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.status-value {
+  font-size: calc(24px * var(--font-scale, 1));
+  font-family: 'Consolas', monospace;
+  font-weight: bold;
+  color: white;
+}
+
+.status-value.accent {
+  color: var(--accent-color);
+}
+
+/* 性能监控容器（可聚焦） */
+.perf-monitor-container {
+  border-radius: 16px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.perf-monitor-container.focused {
+  border-color: var(--accent-color);
+  background: rgba(var(--accent-rgb), 0.05);
+  box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.2);
+}
+
+/* 性能监控状态栏（两行四列） */
+.perf-monitor-grid {
+  background: rgba(30, 35, 41, 0.6);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px 16px;
+  border: 1px solid rgba(61, 68, 80, 0.2);
+}
+
+.perf-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.perf-label {
+  font-size: calc(11px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.perf-value {
+  font-size: calc(18px * var(--font-scale, 1));
+  font-family: 'Consolas', monospace;
+  font-weight: bold;
+  color: white;
+}
+
+.perf-value.accent {
+  color: var(--accent-color);
+}
+
+.perf-value.power {
+  color: #f06060;
+}
+
+.perf-value.cpu {
+  color: #80ffff;
+}
+
+.perf-value.temp {
+  color: #a0ff50;
+}
+
+.perf-value.temp.hot {
+  color: #ff5050;
+}
+
+.perf-value.gpu {
+  color: #ff90ff;
+}
+
+.perf-value.fan {
+  color: #9090ff;
+}
+
+.perf-value.battery {
+  color: #10b981;
+}
+
+.perf-value.battery.low {
+  color: #ef4444;
+}
+
+.perf-value.battery.charging {
+  color: #fbbf24;
+}
+
+.perf-value.time {
+  color: #94a3b8;
+}
+
+.perf-value.ac {
+  color: #fbbf24;
+}
+
+.perf-value.auto-tdp {
+  color: #10b981;
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* 浅色主题 */
+[data-theme="light"] .perf-monitor-grid,
+[data-theme="cream"] .perf-monitor-grid,
+[data-theme="lavender"] .perf-monitor-grid,
+[data-theme="mint"] .perf-monitor-grid,
+[data-theme="sky"] .perf-monitor-grid,
+[data-theme="rose"] .perf-monitor-grid {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* 浅色主题下的性能数据颜色（更深的颜色以适应浅色背景） */
+[data-theme="light"] .perf-value,
+[data-theme="cream"] .perf-value,
+[data-theme="lavender"] .perf-value,
+[data-theme="mint"] .perf-value,
+[data-theme="sky"] .perf-value,
+[data-theme="rose"] .perf-value {
+  color: var(--text-color);
+}
+
+[data-theme="light"] .perf-value.accent,
+[data-theme="cream"] .perf-value.accent,
+[data-theme="lavender"] .perf-value.accent,
+[data-theme="mint"] .perf-value.accent,
+[data-theme="sky"] .perf-value.accent,
+[data-theme="rose"] .perf-value.accent {
+  color: var(--accent-color);
+}
+
+[data-theme="light"] .perf-value.power,
+[data-theme="cream"] .perf-value.power,
+[data-theme="lavender"] .perf-value.power,
+[data-theme="mint"] .perf-value.power,
+[data-theme="sky"] .perf-value.power,
+[data-theme="rose"] .perf-value.power {
+  color: #dc2626;
+}
+
+[data-theme="light"] .perf-value.cpu,
+[data-theme="cream"] .perf-value.cpu,
+[data-theme="lavender"] .perf-value.cpu,
+[data-theme="mint"] .perf-value.cpu,
+[data-theme="sky"] .perf-value.cpu,
+[data-theme="rose"] .perf-value.cpu {
+  color: #0891b2;
+}
+
+[data-theme="light"] .perf-value.temp,
+[data-theme="cream"] .perf-value.temp,
+[data-theme="lavender"] .perf-value.temp,
+[data-theme="mint"] .perf-value.temp,
+[data-theme="sky"] .perf-value.temp,
+[data-theme="rose"] .perf-value.temp {
+  color: #65a30d;
+}
+
+[data-theme="light"] .perf-value.temp.hot,
+[data-theme="cream"] .perf-value.temp.hot,
+[data-theme="lavender"] .perf-value.temp.hot,
+[data-theme="mint"] .perf-value.temp.hot,
+[data-theme="sky"] .perf-value.temp.hot,
+[data-theme="rose"] .perf-value.temp.hot {
+  color: #dc2626;
+}
+
+[data-theme="light"] .perf-value.gpu,
+[data-theme="cream"] .perf-value.gpu,
+[data-theme="lavender"] .perf-value.gpu,
+[data-theme="mint"] .perf-value.gpu,
+[data-theme="sky"] .perf-value.gpu,
+[data-theme="rose"] .perf-value.gpu {
+  color: #c026d3;
+}
+
+[data-theme="light"] .perf-value.fan,
+[data-theme="cream"] .perf-value.fan,
+[data-theme="lavender"] .perf-value.fan,
+[data-theme="mint"] .perf-value.fan,
+[data-theme="sky"] .perf-value.fan,
+[data-theme="rose"] .perf-value.fan {
+  color: #4f46e5;
+}
+
+[data-theme="light"] .perf-value.battery,
+[data-theme="cream"] .perf-value.battery,
+[data-theme="lavender"] .perf-value.battery,
+[data-theme="mint"] .perf-value.battery,
+[data-theme="sky"] .perf-value.battery,
+[data-theme="rose"] .perf-value.battery {
+  color: #059669;
+}
+
+[data-theme="light"] .perf-value.battery.low,
+[data-theme="cream"] .perf-value.battery.low,
+[data-theme="lavender"] .perf-value.battery.low,
+[data-theme="mint"] .perf-value.battery.low,
+[data-theme="sky"] .perf-value.battery.low,
+[data-theme="rose"] .perf-value.battery.low {
+  color: #dc2626;
+}
+
+[data-theme="light"] .perf-value.battery.charging,
+[data-theme="cream"] .perf-value.battery.charging,
+[data-theme="lavender"] .perf-value.battery.charging,
+[data-theme="mint"] .perf-value.battery.charging,
+[data-theme="sky"] .perf-value.battery.charging,
+[data-theme="rose"] .perf-value.battery.charging {
+  color: #d97706;
+}
+
+[data-theme="light"] .perf-value.time,
+[data-theme="cream"] .perf-value.time,
+[data-theme="lavender"] .perf-value.time,
+[data-theme="mint"] .perf-value.time,
+[data-theme="sky"] .perf-value.time,
+[data-theme="rose"] .perf-value.time {
+  color: #64748b;
+}
+
+[data-theme="light"] .perf-value.ac,
+[data-theme="cream"] .perf-value.ac,
+[data-theme="lavender"] .perf-value.ac,
+[data-theme="mint"] .perf-value.ac,
+[data-theme="sky"] .perf-value.ac,
+[data-theme="rose"] .perf-value.ac {
+  color: #d97706;
+}
+
+[data-theme="light"] .perf-value.auto-tdp,
+[data-theme="cream"] .perf-value.auto-tdp,
+[data-theme="lavender"] .perf-value.auto-tdp,
+[data-theme="mint"] .perf-value.auto-tdp,
+[data-theme="sky"] .perf-value.auto-tdp,
+[data-theme="rose"] .perf-value.auto-tdp {
+  color: #059669;
+}
+
+/* 项目头部和右侧 */
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.item-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: calc(14px * var(--font-scale, 1));
+  font-weight: 700;
+}
+
+.item-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-value {
+  font-family: 'Consolas', monospace;
+  font-weight: 700;
+  font-size: calc(16px * var(--font-scale, 1));
+}
+
+.item-value.listening {
+  color: #fbbf24;
+  animation: pulse 1s infinite;
+}
+
+/* 提示标签 */
+.action-hint {
+  font-size: calc(10px * var(--font-scale, 1));
+  background: rgba(102, 192, 244, 0.2);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: var(--accent-color);
+  border: 1px solid rgba(102, 192, 244, 0.3);
+}
+
+.unsaved-badge {
+  font-size: calc(10px * var(--font-scale, 1));
+  background: #fbbf24;
+  color: black;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+.current-badge {
+  font-size: calc(10px * var(--font-scale, 1));
+  background: rgba(30, 35, 41, 1);
+  color: var(--accent-color);
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-weight: bold;
+  border: 1px solid rgba(61, 68, 80, 0.3);
+}
+
+.hold-hint {
+  font-size: calc(12px * var(--font-scale, 1));
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+}
+
+/* Stepper 样式 */
+.stepper-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 4px;
+  height: 40px;
+}
+
+.stepper-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.stepper-item:hover {
+  background: rgba(102, 192, 244, 0.15);
+}
+
+.stepper-item:hover .stepper-label {
+  color: var(--accent-color);
+}
+
+.stepper-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.15s;
+}
+
+.stepper-item.active .stepper-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--accent-color);
+  box-shadow: 0 0 8px rgba(102, 192, 244, 0.6);
+}
+
+.stepper-label {
+  font-size: calc(10px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-muted);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.stepper-item.active .stepper-label {
+  color: var(--accent-color);
+  transform: scale(1.1);
+}
+
+.list-item.focused .stepper-item.active .stepper-label {
+  color: white;
+}
+
+/* 箭头式 Stepper (用于选项过多的场景) */
+.arrow-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.arrow-stepper-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(61, 68, 80, 0.3);
+  border: 1px solid rgba(61, 68, 80, 0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-muted);
+}
+
+.arrow-stepper-btn:hover {
+  background: rgba(102, 192, 244, 0.2);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.arrow-stepper-btn:active {
+  transform: scale(0.95);
+}
+
+.arrow-stepper-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.arrow-stepper-value {
+  min-width: 100px;
+  text-align: center;
+  font-size: calc(14px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.list-item.focused .arrow-stepper-btn {
+  background: rgba(102, 192, 244, 0.15);
+  border-color: rgba(102, 192, 244, 0.4);
+  color: var(--accent-color);
+}
+
+.list-item.focused .arrow-stepper-value {
+  color: white;
+}
+
+/* 模式行 */
+.mode-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mode-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 6px 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.mode-item:hover {
+  background: rgba(102, 192, 244, 0.15);
+}
+
+.mode-item:hover span {
+  color: var(--accent-color);
+}
+
+.mode-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.15s;
+}
+
+.mode-item.active .mode-bar {
+  background: var(--accent-color);
+  box-shadow: 0 0 8px rgba(102, 192, 244, 0.6);
+}
+
+.mode-item span {
+  font-size: calc(9px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.mode-item.active span {
+  color: var(--accent-color);
+}
+
+.list-item.focused .mode-item.active span {
+  color: white;
+}
+
+/* 分隔线 */
+.divider {
+  height: 1px;
+  background: rgba(61, 68, 80, 0.3);
+  margin: 16px 0;
+}
+
+/* 监听面板 */
+.listening-panel {
+  background: rgba(14, 20, 25, 0.6);
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(61, 68, 80, 0.2);
+  margin-top: 12px;
+}
+
+.listening-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: calc(10px * var(--font-scale, 1));
+  margin-bottom: 8px;
+}
+
+.listening-header span:first-child {
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.countdown {
+  color: #fbbf24;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.listening-bar {
+  height: 6px;
+  width: 100%;
+  background: rgba(14, 20, 25, 0.6);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(61, 68, 80, 0.2);
+}
+
+.listening-fill {
+  height: 100%;
+  background: var(--accent-color);
+  transition: width 1s linear;
+  box-shadow: 0 0 8px rgba(102, 192, 244, 0.4);
+}
+
+.detected-keys {
+  font-size: calc(10px * var(--font-scale, 1));
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.detected-keys .keys {
+  font-weight: bold;
+  color: white;
+  background: rgba(30, 35, 41, 0.6);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(61, 68, 80, 0.3);
+}
+
+/* 游戏网格 - 高 DPI 兼容 */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.game-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  aspect-ratio: 3/4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 35, 41, 0.6);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.game-card:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.game-card.focused {
+  border-color: var(--accent-color);
+  transform: scale(1.03);
+  box-shadow: 0 0 16px rgba(102, 192, 244, 0.3);
+}
+
+.game-cover {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.game-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.game-name {
+  font-size: calc(10px * var(--font-scale, 1));
+  font-weight: 700;
+  text-align: center;
+  padding: 6px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.game-card.focused .game-name {
+  color: white;
+}
+
+.action-card {
+  background: linear-gradient(135deg, rgba(44, 54, 77, 0.8), rgba(30, 35, 50, 0.9));
+}
+
+.action-card span {
+  font-size: calc(12px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-muted);
+}
+
+.action-card.focused span {
+  color: white;
+}
+
+.steam-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: calc(8px * var(--font-scale, 1));
+  font-weight: bold;
+  background: #1b2838;
+  color: #66c0f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* 游戏库头部 */
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.library-hints {
+  display: flex;
+  gap: 12px;
+  font-size: calc(10px * var(--font-scale, 1));
+  color: var(--text-muted);
+}
+
+.hint-text {
+  font-size: calc(11px * var(--font-scale, 1));
+  text-align: center;
+  color: var(--text-muted);
+  margin-top: 12px;
+}
+
+.hint-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hint-key {
+  padding: 2px 6px;
+  background: rgba(61, 68, 80, 0.5);
+  border-radius: 4px;
+  font-size: calc(9px * var(--font-scale, 1));
+  font-weight: bold;
+}
+
+/* 游戏网格分类标题 */
+.grid-section-title {
+  grid-column: span 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: calc(10px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 8px 0 -4px 0;
+}
+
+.grid-section-title .icon-accent {
+  color: var(--accent-color);
+}
+
+.grid-section-title .icon-muted {
+  color: var(--text-muted);
+}
+
+/* 游戏卡片覆盖层 */
+.game-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2a2f3a, #1a1f26);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  color: var(--text-muted);
+}
+
+.placeholder-name {
+  font-size: calc(10px * var(--font-scale, 1));
+  text-align: center;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.game-info-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  padding: 8px;
+}
+
+.game-info-overlay .game-name {
+  font-size: calc(12px * var(--font-scale, 1));
+  font-weight: bold;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-last-played {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: calc(9px * var(--font-scale, 1));
+  color: var(--accent-color);
+  margin-top: 2px;
+}
+
+.game-source {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: calc(9px * var(--font-scale, 1));
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.game-focus-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(102, 192, 244, 0.1);
+  pointer-events: none;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--text-muted);
+}
+
+.empty-state svg {
+  opacity: 0.5;
+  margin-bottom: 12px;
+}
+
+.empty-title {
+  font-size: calc(14px * var(--font-scale, 1));
+  margin-bottom: 4px;
+}
+
+.empty-hint {
+  font-size: calc(12px * var(--font-scale, 1));
+}
+
+/* 图标颜色类 */
+.icon-accent {
+  color: var(--accent-color);
+}
+
+.icon-muted {
+  color: var(--text-muted);
+}
+
+/* 动作项 */
+.list-item.action-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* 手柄测试 */
+.test-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(90deg, #ff6b35, #f7931e);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.pulse-dot {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+.banner-hint {
+  margin-left: auto;
+  font-size: calc(12px * var(--font-scale, 1));
+  opacity: 0.9;
+}
+
+.exit-progress,
+.progress-panel {
+  background: rgba(14, 20, 25, 0.6);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(61, 68, 80, 0.2);
+  margin-bottom: 8px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: calc(10px * var(--font-scale, 1));
+  margin-bottom: 8px;
+}
+
+.progress-value {
+  color: var(--accent-color);
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.progress-bar {
+  height: 6px;
+  width: 100%;
+  background: rgba(14, 20, 25, 0.6);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-color);
+  box-shadow: 0 0 8px rgba(102, 192, 244, 0.4);
+}
+
+.gamepad-visual {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.gamepad-svg {
+  width: 100%;
+  max-width: 300px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.gamepad-svg-full {
+  width: 100%;
+  max-width: 420px;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+}
+
+.gamepad-data-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  background: rgba(26, 31, 38, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  border: 1px solid rgba(61, 68, 80, 0.3);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.data-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.data-label {
+  font-size: calc(9px * var(--font-scale, 1));
+  color: var(--accent-color);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.data-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: calc(11px * var(--font-scale, 1));
+  color: var(--text-muted);
+}
+
+.data-value {
+  font-family: monospace;
+  color: #22c55e;
+  font-weight: 700;
+}
+
+.data-value.trigger {
+  color: #3b82f6;
+}
+
+.trigger-bar {
+  height: 6px;
+  background: rgba(45, 55, 72, 1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.trigger-fill {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 3px;
+}
+
+.pressed-buttons {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(61, 68, 80, 0.3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.pressed-label {
+  font-size: calc(9px * var(--font-scale, 1));
+  color: var(--text-muted);
+}
+
+.no-press {
+  font-size: calc(9px * var(--font-scale, 1));
+  color: var(--text-muted);
+}
+
+.btn-tag {
+  font-size: calc(10px * var(--font-scale, 1));
+  background: var(--accent-color);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.exit-fill {
+  background: #ff6b35;
+  box-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
+}
+
+/* 测试入口卡片 */
+.list-item.test-entry.focused {
+  background: linear-gradient(90deg, #1a9fff, #0077e6);
+  border-color: #4cb4ff;
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(26, 159, 255, 0.4);
+}
+
+/* 底部 */
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: rgba(14, 20, 25, 0.8);
+  border-top: 1px solid rgba(61, 68, 80, 0.3);
+  font-size: calc(11px * var(--font-scale, 1));
+  color: var(--text-muted);
+}
+
+.footer-brand {
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.footer-sep {
+  color: rgba(61, 68, 80, 0.5);
+}
+
+/* 禁用状态 */
+.list-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 警告横幅 */
+.warning-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: var(--radius-lg);
+  color: #fca5a5;
+  font-size: calc(12px * var(--font-scale, 1));
+}
+
+.warning-banner svg {
+  flex-shrink: 0;
+  color: #f87171;
+}
+
+/* 信息横幅 */
+.info-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  border-radius: var(--radius-lg);
+  font-size: calc(12px * var(--font-scale, 1));
+}
+
+.info-banner.success {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #86efac;
+}
+
+.info-banner.success svg {
+  color: #22c55e;
+}
+
+.info-banner.warning {
+  background: rgba(234, 179, 8, 0.15);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  color: #fde047;
+}
+
+.info-banner.warning svg {
+  color: #eab308;
+}
+
+.info-banner.error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.info-banner.error svg {
+  color: #ef4444;
+}
+
+.info-banner svg {
+  flex-shrink: 0;
+}
+
+/* 链接按钮 */
+.link-button {
+  background: none;
+  border: none;
+  color: var(--accent-primary);
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  color: var(--accent-secondary);
+}
+
+/* 警告文本 */
+.warning-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #fde047;
+}
+
+.warning-text svg {
+  flex-shrink: 0;
+  color: #eab308;
+}
+
+/* 链接样式 */
+.link {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+.link:hover {
+  color: var(--accent-secondary);
+}
+
+/* 操作按钮组 */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: calc(12px * var(--font-scale, 1));
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.action-button.primary {
+  background: var(--accent-primary);
+  color: #000;
+}
+
+.action-button.primary:hover:not(:disabled) {
+  background: var(--accent-secondary);
+}
+
+.action-button.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-button.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.action-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.action-button svg {
+  flex-shrink: 0;
+}
+
+/* 旋转动画 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+
+/* 指南页样式 */
+.guide-section {
+  background: var(--bg-item);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.guide-title {
+  font-size: calc(14px * var(--font-scale, 1));
+  font-weight: 600;
+  color: var(--accent-color);
+  margin: 0 0 12px 0;
+}
+
+.guide-content {
+  font-size: calc(13px * var(--font-scale, 1));
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.guide-content p {
+  margin: 4px 0;
+}
+
+.guide-content strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* 紧凑型快捷键网格 - 高 DPI 兼容 */
+.shortcuts-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.shortcut-item-compact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 0;
+  min-width: 0;
+  /* 防止内容撑开 grid */
+  background: var(--bg-item);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.shortcut-item-compact.focused {
+  background: var(--bg-item-focus);
+  border-color: var(--accent-color);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-focus);
+  z-index: 1;
+}
+
+.shortcut-item-compact .item-title {
+  display: flex;
+  align-items: center;
+  font-size: calc(12px * var(--font-scale, 1));
+  gap: 8px;
+  color: var(--text-primary);
+  min-width: 0;
+  /* 允许文字收缩 */
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shortcut-item-compact svg {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  /* 防止 SVG 被压缩 */
+  opacity: 0.8;
+  transition: all 0.2s;
+}
+
+.shortcut-item-compact.focused svg {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* 快捷键图标颜色 */
+.shortcut-icon-blue {
+  stroke: #3b82f6;
+}
+
+.shortcut-icon-cyan {
+  stroke: #06b6d4;
+}
+
+.shortcut-icon-teal {
+  stroke: #14b8a6;
+}
+
+.shortcut-icon-violet {
+  stroke: #8b5cf6;
+}
+
+.shortcut-icon-sky {
+  stroke: #0ea5e9;
+}
+
+.shortcut-icon-gray {
+  stroke: #9ca3af;
+}
+
+.shortcut-icon-red {
+  stroke: #ef4444;
+}
+
+.shortcut-icon-slate {
+  stroke: #64748b;
+}
+
+.shortcut-icon-indigo {
+  stroke: #6366f1;
+}
+
+.shortcut-icon-amber {
+  stroke: #f59e0b;
+}
+
+.shortcut-icon-green {
+  stroke: #22c55e;
+}
+
+.shortcut-icon-rose {
+  stroke: #f43f5e;
+}
+
+.shortcut-icon-purple {
+  stroke: #a855f7;
+}
+
+.shortcut-icon-orange {
+  stroke: #f97316;
+}
+
+.shortcut-command {
+  font-size: calc(9px * var(--font-scale, 1));
+  font-family: 'Consolas', monospace;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.shortcut-item-compact.focused .shortcut-command {
+  color: white;
+  border-color: rgba(102, 192, 244, 0.4);
+  background: rgba(102, 192, 244, 0.1);
+}
+
+/* 删除进度条覆盖层 */
+.delete-progress-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: inherit;
+  z-index: 20;
+}
+
+.delete-progress-text {
+  font-size: calc(11px * var(--font-scale, 1));
+  font-weight: bold;
+  color: #ef4444;
+}
+
+.delete-progress-bar {
+  width: 80%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.delete-progress-fill {
+  height: 100%;
+  background: #ef4444;
+  border-radius: 3px;
+  transition: width 0.05s linear;
+}
+
+/* ====== 电池状态样式 ====== */
+.battery-status,
+.ac-power {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 6px;
+}
+
+.battery-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+}
+
+.battery-status .status-value,
+.ac-power .status-value {
+  font-size: calc(18px * var(--font-scale, 1));
+}
+
+.battery-status.charging .battery-icon {
+  color: #22c55e;
+  /* green-500 */
+}
+
+.battery-status.low .battery-icon {
+  color: #ef4444;
+  /* red-500 */
+}
+
+.battery-status.low .status-value {
+  color: #ef4444;
+}
+
+.battery-time {
+  font-size: calc(12px * var(--font-scale, 1));
+  color: var(--text-muted);
+}
+
+.ac-power .battery-icon {
+  color: var(--accent-color);
+}
+
+.ac-power .status-value {
+  color: var(--accent-color);
+}
+
+/* ====== 浅色主题组件覆盖 ====== */
+[data-theme="light"] .status-overview,
+[data-theme="cream"] .status-overview,
+[data-theme="lavender"] .status-overview,
+[data-theme="mint"] .status-overview,
+[data-theme="sky"] .status-overview,
+[data-theme="rose"] .status-overview {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .status-value,
+[data-theme="cream"] .status-value,
+[data-theme="lavender"] .status-value,
+[data-theme="mint"] .status-value,
+[data-theme="sky"] .status-value,
+[data-theme="rose"] .status-value {
+  color: var(--text-primary);
+}
+
+/* 聚焦时的文字颜色 */
+[data-theme="light"] .list-item.focused .stepper-item.active .stepper-label,
+[data-theme="cream"] .list-item.focused .stepper-item.active .stepper-label,
+[data-theme="lavender"] .list-item.focused .stepper-item.active .stepper-label,
+[data-theme="mint"] .list-item.focused .stepper-item.active .stepper-label,
+[data-theme="sky"] .list-item.focused .stepper-item.active .stepper-label,
+[data-theme="rose"] .list-item.focused .stepper-item.active .stepper-label {
+  color: var(--accent-color);
+}
+
+[data-theme="light"] .list-item.focused .mode-item.active span,
+[data-theme="cream"] .list-item.focused .mode-item.active span,
+[data-theme="lavender"] .list-item.focused .mode-item.active span,
+[data-theme="mint"] .list-item.focused .mode-item.active span,
+[data-theme="sky"] .list-item.focused .mode-item.active span,
+[data-theme="rose"] .list-item.focused .mode-item.active span {
+  color: var(--accent-color);
+}
+
+[data-theme="light"] .game-card.focused .game-name,
+[data-theme="cream"] .game-card.focused .game-name,
+[data-theme="lavender"] .game-card.focused .game-name,
+[data-theme="mint"] .game-card.focused .game-name,
+[data-theme="sky"] .game-card.focused .game-name,
+[data-theme="rose"] .game-card.focused .game-name {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .action-card.focused span,
+[data-theme="cream"] .action-card.focused span,
+[data-theme="lavender"] .action-card.focused span,
+[data-theme="mint"] .action-card.focused span,
+[data-theme="sky"] .action-card.focused span,
+[data-theme="rose"] .action-card.focused span {
+  color: var(--text-primary);
+}
+
+/* 检测到的按键文字 */
+[data-theme="light"] .detected-keys,
+[data-theme="cream"] .detected-keys,
+[data-theme="lavender"] .detected-keys,
+[data-theme="mint"] .detected-keys,
+[data-theme="sky"] .detected-keys,
+[data-theme="rose"] .detected-keys {
+  color: var(--text-secondary);
+}
+
+/* 监听头部文字 */
+[data-theme="light"] .listening-header span:first-child,
+[data-theme="cream"] .listening-header span:first-child,
+[data-theme="lavender"] .listening-header span:first-child,
+[data-theme="mint"] .listening-header span:first-child,
+[data-theme="sky"] .listening-header span:first-child,
+[data-theme="rose"] .listening-header span:first-child {
+  color: var(--text-secondary);
+}
+
+/* 聚焦状态 */
+[data-theme="light"] .list-item.focused,
+[data-theme="cream"] .list-item.focused,
+[data-theme="lavender"] .list-item.focused,
+[data-theme="mint"] .list-item.focused,
+[data-theme="sky"] .list-item.focused,
+[data-theme="rose"] .list-item.focused,
+[data-theme="light"] .game-card.focused,
+[data-theme="cream"] .game-card.focused,
+[data-theme="lavender"] .game-card.focused,
+[data-theme="mint"] .game-card.focused,
+[data-theme="sky"] .game-card.focused,
+[data-theme="rose"] .game-card.focused {
+  background: rgba(0, 0, 0, 0.06) !important;
+  color: var(--text-primary) !important;
+}
+
+/* 底部栏 */
+[data-theme="light"] .footer,
+[data-theme="cream"] .footer,
+[data-theme="lavender"] .footer,
+[data-theme="mint"] .footer,
+[data-theme="sky"] .footer,
+[data-theme="rose"] .footer {
+  background: rgba(0, 0, 0, 0.04);
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+/* 滑块轨道 - 浅色主题使用 ::before 伪元素 */
+[data-theme="light"] .slider-track::before,
+[data-theme="cream"] .slider-track::before,
+[data-theme="lavender"] .slider-track::before,
+[data-theme="mint"] .slider-track::before,
+[data-theme="sky"] .slider-track::before,
+[data-theme="rose"] .slider-track::before {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* 分隔线 */
+[data-theme="light"] .divider,
+[data-theme="cream"] .divider,
+[data-theme="lavender"] .divider,
+[data-theme="mint"] .divider,
+[data-theme="sky"] .divider,
+[data-theme="rose"] .divider {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Stepper 点和标签 */
+[data-theme="light"] .stepper-dot,
+[data-theme="cream"] .stepper-dot,
+[data-theme="lavender"] .stepper-dot,
+[data-theme="mint"] .stepper-dot,
+[data-theme="sky"] .stepper-dot,
+[data-theme="rose"] .stepper-dot {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* 箭头式 Stepper 浅色主题 */
+[data-theme="light"] .arrow-stepper-btn,
+[data-theme="cream"] .arrow-stepper-btn,
+[data-theme="lavender"] .arrow-stepper-btn,
+[data-theme="mint"] .arrow-stepper-btn,
+[data-theme="sky"] .arrow-stepper-btn,
+[data-theme="rose"] .arrow-stepper-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .arrow-stepper-btn:hover,
+[data-theme="cream"] .arrow-stepper-btn:hover,
+[data-theme="lavender"] .arrow-stepper-btn:hover,
+[data-theme="mint"] .arrow-stepper-btn:hover,
+[data-theme="sky"] .arrow-stepper-btn:hover,
+[data-theme="rose"] .arrow-stepper-btn:hover {
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+[data-theme="light"] .list-item.focused .arrow-stepper-btn,
+[data-theme="cream"] .list-item.focused .arrow-stepper-btn,
+[data-theme="lavender"] .list-item.focused .arrow-stepper-btn,
+[data-theme="mint"] .list-item.focused .arrow-stepper-btn,
+[data-theme="sky"] .list-item.focused .arrow-stepper-btn,
+[data-theme="rose"] .list-item.focused .arrow-stepper-btn {
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: rgba(var(--accent-rgb), 0.3);
+  color: var(--accent-color);
+}
+
+[data-theme="light"] .list-item.focused .arrow-stepper-value,
+[data-theme="cream"] .list-item.focused .arrow-stepper-value,
+[data-theme="lavender"] .list-item.focused .arrow-stepper-value,
+[data-theme="mint"] .list-item.focused .arrow-stepper-value,
+[data-theme="sky"] .list-item.focused .arrow-stepper-value,
+[data-theme="rose"] .list-item.focused .arrow-stepper-value {
+  color: var(--accent-color);
+}
+
+/* 模式栏 */
+[data-theme="light"] .mode-bar,
+[data-theme="cream"] .mode-bar,
+[data-theme="lavender"] .mode-bar,
+[data-theme="mint"] .mode-bar,
+[data-theme="sky"] .mode-bar,
+[data-theme="rose"] .mode-bar {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* 游戏卡片 */
+[data-theme="light"] .game-card,
+[data-theme="cream"] .game-card,
+[data-theme="lavender"] .game-card,
+[data-theme="mint"] .game-card,
+[data-theme="sky"] .game-card,
+[data-theme="rose"] .game-card {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .action-card,
+[data-theme="cream"] .action-card,
+[data-theme="lavender"] .action-card,
+[data-theme="mint"] .action-card,
+[data-theme="sky"] .action-card,
+[data-theme="rose"] .action-card {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.08));
+}
+
+/* 自定义滚动条 */
+[data-theme="light"] .custom-scrollbar::-webkit-scrollbar-track,
+[data-theme="cream"] .custom-scrollbar::-webkit-scrollbar-track,
+[data-theme="lavender"] .custom-scrollbar::-webkit-scrollbar-track,
+[data-theme="mint"] .custom-scrollbar::-webkit-scrollbar-track,
+[data-theme="sky"] .custom-scrollbar::-webkit-scrollbar-track,
+[data-theme="rose"] .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* 监听面板 */
+[data-theme="light"] .listening-panel,
+[data-theme="cream"] .listening-panel,
+[data-theme="lavender"] .listening-panel,
+[data-theme="mint"] .listening-panel,
+[data-theme="sky"] .listening-panel,
+[data-theme="rose"] .listening-panel {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .listening-bar,
+[data-theme="cream"] .listening-bar,
+[data-theme="lavender"] .listening-bar,
+[data-theme="mint"] .listening-bar,
+[data-theme="sky"] .listening-bar,
+[data-theme="rose"] .listening-bar {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 快捷键命令标签 */
+[data-theme="light"] .shortcut-command,
+[data-theme="cream"] .shortcut-command,
+[data-theme="lavender"] .shortcut-command,
+[data-theme="mint"] .shortcut-command,
+[data-theme="sky"] .shortcut-command,
+[data-theme="rose"] .shortcut-command {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 进度条背景 */
+[data-theme="light"] .progress-bar,
+[data-theme="cream"] .progress-bar,
+[data-theme="lavender"] .progress-bar,
+[data-theme="mint"] .progress-bar,
+[data-theme="sky"] .progress-bar,
+[data-theme="rose"] .progress-bar,
+[data-theme="light"] .trigger-bar,
+[data-theme="cream"] .trigger-bar,
+[data-theme="lavender"] .trigger-bar,
+[data-theme="mint"] .trigger-bar,
+[data-theme="sky"] .trigger-bar,
+[data-theme="rose"] .trigger-bar {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* 手柄数据网格 */
+[data-theme="light"] .gamepad-data-grid,
+[data-theme="cream"] .gamepad-data-grid,
+[data-theme="lavender"] .gamepad-data-grid,
+[data-theme="mint"] .gamepad-data-grid,
+[data-theme="sky"] .gamepad-data-grid,
+[data-theme="rose"] .gamepad-data-grid {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* 关于卡片 */
+[data-theme="light"] .about-card,
+[data-theme="cream"] .about-card,
+[data-theme="lavender"] .about-card,
+[data-theme="mint"] .about-card,
+[data-theme="sky"] .about-card,
+[data-theme="rose"] .about-card {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* 当前/未保存 状态标签 */
+[data-theme="light"] .current-badge,
+[data-theme="cream"] .current-badge,
+[data-theme="lavender"] .current-badge,
+[data-theme="mint"] .current-badge,
+[data-theme="sky"] .current-badge,
+[data-theme="rose"] .current-badge {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+/* 操作提示 */
+[data-theme="light"] .action-hint,
+[data-theme="cream"] .action-hint,
+[data-theme="lavender"] .action-hint,
+[data-theme="mint"] .action-hint,
+[data-theme="sky"] .action-hint,
+[data-theme="rose"] .action-hint {
+  background: rgba(var(--accent-color-rgb, 59, 130, 246), 0.15);
+  border-color: rgba(var(--accent-color-rgb, 59, 130, 246), 0.25);
+}
+
+/* Steam 徽章 */
+[data-theme="light"] .steam-badge,
+[data-theme="cream"] .steam-badge,
+[data-theme="lavender"] .steam-badge,
+[data-theme="mint"] .steam-badge,
+[data-theme="sky"] .steam-badge,
+[data-theme="rose"] .steam-badge {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--accent-color);
+}
+
+/* 提示按键 */
+[data-theme="light"] .hint-key,
+[data-theme="cream"] .hint-key,
+[data-theme="lavender"] .hint-key,
+[data-theme="mint"] .hint-key,
+[data-theme="sky"] .hint-key,
+[data-theme="rose"] .hint-key {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* 检测到的按键 */
+[data-theme="light"] .detected-keys .keys,
+[data-theme="cream"] .detected-keys .keys,
+[data-theme="lavender"] .detected-keys .keys,
+[data-theme="mint"] .detected-keys .keys,
+[data-theme="sky"] .detected-keys .keys,
+[data-theme="rose"] .detected-keys .keys {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+}
+
+/* 退出进度面板 */
+[data-theme="light"] .exit-progress,
+[data-theme="cream"] .exit-progress,
+[data-theme="lavender"] .exit-progress,
+[data-theme="mint"] .exit-progress,
+[data-theme="sky"] .exit-progress,
+[data-theme="rose"] .exit-progress,
+[data-theme="light"] .progress-panel,
+[data-theme="cream"] .progress-panel,
+[data-theme="lavender"] .progress-panel,
+[data-theme="mint"] .progress-panel,
+[data-theme="sky"] .progress-panel,
+[data-theme="rose"] .progress-panel {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* 快捷键项 */
+[data-theme="light"] .shortcut-item-compact,
+[data-theme="cream"] .shortcut-item-compact,
+[data-theme="lavender"] .shortcut-item-compact,
+[data-theme="mint"] .shortcut-item-compact,
+[data-theme="sky"] .shortcut-item-compact,
+[data-theme="rose"] .shortcut-item-compact {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .shortcut-item-compact.focused,
+[data-theme="cream"] .shortcut-item-compact.focused,
+[data-theme="lavender"] .shortcut-item-compact.focused,
+[data-theme="mint"] .shortcut-item-compact.focused,
+[data-theme="sky"] .shortcut-item-compact.focused,
+[data-theme="rose"] .shortcut-item-compact.focused {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .shortcut-item-compact.focused .shortcut-command,
+[data-theme="cream"] .shortcut-item-compact.focused .shortcut-command,
+[data-theme="lavender"] .shortcut-item-compact.focused .shortcut-command,
+[data-theme="mint"] .shortcut-item-compact.focused .shortcut-command,
+[data-theme="sky"] .shortcut-item-compact.focused .shortcut-command,
+[data-theme="rose"] .shortcut-item-compact.focused .shortcut-command {
+  color: var(--text-primary);
+  background: rgba(var(--accent-color-rgb, 59, 130, 246), 0.1);
+  border-color: rgba(var(--accent-color-rgb, 59, 130, 246), 0.3);
+}
+
+/* 测试横幅 */
+[data-theme="light"] .test-banner,
+[data-theme="cream"] .test-banner,
+[data-theme="lavender"] .test-banner,
+[data-theme="mint"] .test-banner,
+[data-theme="sky"] .test-banner,
+[data-theme="rose"] .test-banner {
+  color: white;
+  /* 保持白色文字 */
+}
+
+/* 删除进度覆盖层 */
+[data-theme="light"] .delete-progress-overlay,
+[data-theme="cream"] .delete-progress-overlay,
+[data-theme="lavender"] .delete-progress-overlay,
+[data-theme="mint"] .delete-progress-overlay,
+[data-theme="sky"] .delete-progress-overlay,
+[data-theme="rose"] .delete-progress-overlay {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+/* 输入框 */
+[data-theme="light"] .hotspot-config-form input,
+[data-theme="cream"] .hotspot-config-form input,
+[data-theme="lavender"] .hotspot-config-form input,
+[data-theme="mint"] .hotspot-config-form input,
+[data-theme="sky"] .hotspot-config-form input,
+[data-theme="rose"] .hotspot-config-form input {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .hotspot-config-form input:focus,
+[data-theme="cream"] .hotspot-config-form input:focus,
+[data-theme="lavender"] .hotspot-config-form input:focus,
+[data-theme="mint"] .hotspot-config-form input:focus,
+[data-theme="sky"] .hotspot-config-form input:focus,
+[data-theme="rose"] .hotspot-config-form input:focus {
+  border-color: var(--accent-color);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* ====== 浅色主题 info-banner 样式 ====== */
+[data-theme="light"] .info-banner.success,
+[data-theme="cream"] .info-banner.success,
+[data-theme="lavender"] .info-banner.success,
+[data-theme="mint"] .info-banner.success,
+[data-theme="sky"] .info-banner.success,
+[data-theme="rose"] .info-banner.success {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #166534;
+}
+
+[data-theme="light"] .info-banner.success svg,
+[data-theme="cream"] .info-banner.success svg,
+[data-theme="lavender"] .info-banner.success svg,
+[data-theme="mint"] .info-banner.success svg,
+[data-theme="sky"] .info-banner.success svg,
+[data-theme="rose"] .info-banner.success svg {
+  color: #16a34a;
+}
+
+[data-theme="light"] .info-banner.warning,
+[data-theme="cream"] .info-banner.warning,
+[data-theme="lavender"] .info-banner.warning,
+[data-theme="mint"] .info-banner.warning,
+[data-theme="sky"] .info-banner.warning,
+[data-theme="rose"] .info-banner.warning {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: rgba(234, 179, 8, 0.35);
+  color: #854d0e;
+}
+
+[data-theme="light"] .info-banner.warning svg,
+[data-theme="cream"] .info-banner.warning svg,
+[data-theme="lavender"] .info-banner.warning svg,
+[data-theme="mint"] .info-banner.warning svg,
+[data-theme="sky"] .info-banner.warning svg,
+[data-theme="rose"] .info-banner.warning svg {
+  color: #ca8a04;
+}
+
+[data-theme="light"] .info-banner.error,
+[data-theme="cream"] .info-banner.error,
+[data-theme="lavender"] .info-banner.error,
+[data-theme="mint"] .info-banner.error,
+[data-theme="sky"] .info-banner.error,
+[data-theme="rose"] .info-banner.error {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #991b1b;
+}
+
+[data-theme="light"] .info-banner.error svg,
+[data-theme="cream"] .info-banner.error svg,
+[data-theme="lavender"] .info-banner.error svg,
+[data-theme="mint"] .info-banner.error svg,
+[data-theme="sky"] .info-banner.error svg,
+[data-theme="rose"] .info-banner.error svg {
+  color: #dc2626;
+}
+
+/* 浅色主题 warning-banner 样式 */
+[data-theme="light"] .warning-banner,
+[data-theme="cream"] .warning-banner,
+[data-theme="lavender"] .warning-banner,
+[data-theme="mint"] .warning-banner,
+[data-theme="sky"] .warning-banner,
+[data-theme="rose"] .warning-banner {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #991b1b;
+}
+
+[data-theme="light"] .warning-banner svg,
+[data-theme="cream"] .warning-banner svg,
+[data-theme="lavender"] .warning-banner svg,
+[data-theme="mint"] .warning-banner svg,
+[data-theme="sky"] .warning-banner svg,
+[data-theme="rose"] .warning-banner svg {
+  color: #dc2626;
+}
+
+/* 浅色主题 warning-text 样式 */
+[data-theme="light"] .warning-text,
+[data-theme="cream"] .warning-text,
+[data-theme="lavender"] .warning-text,
+[data-theme="mint"] .warning-text,
+[data-theme="sky"] .warning-text,
+[data-theme="rose"] .warning-text {
+  color: #854d0e;
+}
+
+[data-theme="light"] .warning-text svg,
+[data-theme="cream"] .warning-text svg,
+[data-theme="lavender"] .warning-text svg,
+[data-theme="mint"] .warning-text svg,
+[data-theme="sky"] .warning-text svg,
+[data-theme="rose"] .warning-text svg {
+  color: #ca8a04;
+}
+
+/* 浅色主题 link-button 样式 */
+[data-theme="light"] .link-button,
+[data-theme="cream"] .link-button,
+[data-theme="lavender"] .link-button,
+[data-theme="mint"] .link-button,
+[data-theme="sky"] .link-button,
+[data-theme="rose"] .link-button {
+  color: var(--accent-color);
+}
+
+[data-theme="light"] .link-button:hover,
+[data-theme="cream"] .link-button:hover,
+[data-theme="lavender"] .link-button:hover,
+[data-theme="mint"] .link-button:hover,
+[data-theme="sky"] .link-button:hover,
+
+/* ====== Mech Theme Special Overrides ====== */
+
+/* Font Family */
+html[data-theme="mech_green"],
+html[data-theme="mech_gold"],
+html[data-theme="mech_purple"],
+html[data-theme="mech_blue"],
+html[data-theme="mech_white"],
+html[data-theme="mech_red"] {
+  font-family: 'Consolas', 'Courier New', monospace, sans-serif;
+  --mech-clip: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+/* --- Container & List Item --- */
+html[data-theme="mech_green"] .list-item,
+html[data-theme="mech_green"] .game-card,
+html[data-theme="mech_gold"] .list-item,
+html[data-theme="mech_gold"] .game-card,
+html[data-theme="mech_purple"] .list-item,
+html[data-theme="mech_blue"] .list-item,
+html[data-theme="mech_white"] .list-item,
+html[data-theme="mech_red"] .list-item,
+html[data-theme="mech_purple"] .game-card,
+html[data-theme="mech_blue"] .game-card,
+html[data-theme="mech_white"] .game-card,
+html[data-theme="mech_red"] .game-card {
+  clip-path: var(--mech-clip);
+  background: var(--bg-item);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  /* Reset radius */
+  border-radius: 0 !important;
+}
+
+/* Focused State - Enhanced */
+html[data-theme="mech_green"] .list-item.focused,
+html[data-theme="mech_green"] .game-card.focused,
+html[data-theme="mech_gold"] .list-item.focused,
+html[data-theme="mech_gold"] .game-card.focused,
+html[data-theme="mech_purple"] .list-item.focused,
+html[data-theme="mech_blue"] .list-item.focused,
+html[data-theme="mech_white"] .list-item.focused,
+html[data-theme="mech_red"] .list-item.focused,
+html[data-theme="mech_purple"] .game-card.focused,
+html[data-theme="mech_blue"] .game-card.focused,
+html[data-theme="mech_white"] .game-card.focused,
+html[data-theme="mech_red"] .game-card.focused {
+  background: var(--bg-item-focus) !important;
+  border-color: transparent !important;
+  /* border handled by pseudo */
+  transform: scale(1.02);
+  z-index: 10;
+  /* Outer Glow (won't be clipped by clip-path if we use filter) */
+  filter: drop-shadow(0 0 5px var(--accent-glow));
+  box-shadow: none;
+  /* disable default box-shadow */
+}
+
+/* Focus Ring Simulation (Inner Border) */
+html[data-theme="mech_green"] .list-item.focused::before,
+html[data-theme="mech_green"] .game-card.focused::before,
+html[data-theme="mech_gold"] .list-item.focused::before,
+html[data-theme="mech_gold"] .game-card.focused::before,
+html[data-theme="mech_purple"] .list-item.focused::before,
+html[data-theme="mech_blue"] .list-item.focused::before,
+html[data-theme="mech_white"] .list-item.focused::before,
+html[data-theme="mech_red"] .list-item.focused::before,
+html[data-theme="mech_purple"] .game-card.focused::before,
+html[data-theme="mech_blue"] .game-card.focused::before,
+html[data-theme="mech_white"] .game-card.focused::before,
+html[data-theme="mech_red"] .game-card.focused::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--accent-color);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Corner Decorations (Top-Left & Bottom-Right) */
+html[data-theme="mech_green"] .list-item.focused::after,
+html[data-theme="mech_green"] .game-card.focused::after,
+html[data-theme="mech_gold"] .list-item.focused::after,
+html[data-theme="mech_gold"] .game-card.focused::after,
+html[data-theme="mech_purple"] .list-item.focused::after,
+html[data-theme="mech_blue"] .list-item.focused::after,
+html[data-theme="mech_white"] .list-item.focused::after,
+html[data-theme="mech_red"] .list-item.focused::after,
+html[data-theme="mech_purple"] .game-card.focused::after,
+html[data-theme="mech_blue"] .game-card.focused::after,
+html[data-theme="mech_white"] .game-card.focused::after,
+html[data-theme="mech_red"] .game-card.focused::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom right, var(--accent-color) 4px, transparent 0) top left,
+    linear-gradient(to top left, var(--accent-color) 4px, transparent 0) bottom right;
+  background-size: 8px 8px;
+  background-repeat: no-repeat;
+  z-index: 3;
+}
+
+/* --- Header & Typography --- */
+html[data-theme="mech_green"] .item-title,
+html[data-theme="mech_green"] .section-title,
+html[data-theme="mech_green"] .status-label,
+html[data-theme="mech_green"] .perf-label,
+html[data-theme="mech_gold"] .item-title,
+html[data-theme="mech_gold"] .section-title,
+html[data-theme="mech_gold"] .status-label,
+html[data-theme="mech_gold"] .perf-label,
+html[data-theme="mech_purple"] .item-title,
+html[data-theme="mech_blue"] .item-title,
+html[data-theme="mech_white"] .item-title,
+html[data-theme="mech_red"] .item-title,
+html[data-theme="mech_purple"] .section-title,
+html[data-theme="mech_blue"] .section-title,
+html[data-theme="mech_white"] .section-title,
+html[data-theme="mech_red"] .section-title,
+html[data-theme="mech_purple"] .status-label,
+html[data-theme="mech_blue"] .status-label,
+html[data-theme="mech_white"] .status-label,
+html[data-theme="mech_red"] .status-label,
+html[data-theme="mech_purple"] .perf-label,
+html[data-theme="mech_blue"] .perf-label,
+html[data-theme="mech_white"] .perf-label,
+html[data-theme="mech_red"] .perf-label {
+  font-family: 'Consolas', monospace;
+  letter-spacing: 0.05em;
+}
+
+html[data-theme="mech_green"] .list-item.focused .item-title,
+html[data-theme="mech_gold"] .list-item.focused .item-title,
+html[data-theme="mech_purple"] .list-item.focused .item-title,
+html[data-theme="mech_blue"] .list-item.focused .item-title,
+html[data-theme="mech_white"] .list-item.focused .item-title,
+html[data-theme="mech_red"] .list-item.focused .item-title {
+  color: var(--text-highlight);
+}
+
+html[data-theme="mech_green"] .list-item.focused .item-title svg,
+html[data-theme="mech_gold"] .list-item.focused .item-title svg,
+html[data-theme="mech_purple"] .list-item.focused .item-title svg,
+html[data-theme="mech_blue"] .list-item.focused .item-title svg,
+html[data-theme="mech_white"] .list-item.focused .item-title svg,
+html[data-theme="mech_red"] .list-item.focused .item-title svg {
+  color: var(--accent-color);
+  filter: drop-shadow(0 0 5px var(--accent-color));
+}
+
+/* --- Slider --- */
+html[data-theme="mech_green"] .slider-track,
+html[data-theme="mech_gold"] .slider-track,
+html[data-theme="mech_purple"] .slider-track,
+html[data-theme="mech_blue"] .slider-track,
+html[data-theme="mech_white"] .slider-track,
+html[data-theme="mech_red"] .slider-track {
+  height: 24px;
+  /* Taller track area */
+  background: transparent;
+  border-radius: 0;
+  display: block;
+  /* Ensure absolute children positioning works */
+  position: relative;
+  margin-top: 4px;
+}
+
+/* Track Line */
+html[data-theme="mech_green"] .slider-track::before,
+html[data-theme="mech_gold"] .slider-track::before,
+html[data-theme="mech_purple"] .slider-track::before,
+html[data-theme="mech_blue"] .slider-track::before,
+html[data-theme="mech_white"] .slider-track::before,
+html[data-theme="mech_red"] .slider-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--accent-dim);
+}
+
+/* Track Ticks */
+html[data-theme="mech_green"] .slider-track::after,
+html[data-theme="mech_gold"] .slider-track::after,
+html[data-theme="mech_purple"] .slider-track::after,
+html[data-theme="mech_blue"] .slider-track::after,
+html[data-theme="mech_white"] .slider-track::after,
+html[data-theme="mech_red"] .slider-track::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(90deg,
+      var(--accent-color),
+      var(--accent-color) 1px,
+      transparent 1px,
+      transparent 5%);
+  opacity: 0.2;
+  mask-image: linear-gradient(to bottom, transparent 20%, black 20%, black 80%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 20%, black 20%, black 80%, transparent 80%);
+  pointer-events: none;
+}
+
+html[data-theme="mech_green"] .slider-fill,
+html[data-theme="mech_gold"] .slider-fill,
+html[data-theme="mech_purple"] .slider-fill,
+html[data-theme="mech_blue"] .slider-fill,
+html[data-theme="mech_white"] .slider-fill,
+html[data-theme="mech_red"] .slider-fill {
+  height: 2px;
+  background: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-glow-strong);
+  border-radius: 0;
+  z-index: 1;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+}
+
+html[data-theme="mech_green"] .slider-thumb,
+html[data-theme="mech_gold"] .slider-thumb,
+html[data-theme="mech_purple"] .slider-thumb,
+html[data-theme="mech_blue"] .slider-thumb,
+html[data-theme="mech_white"] .slider-thumb,
+html[data-theme="mech_red"] .slider-thumb {
+  width: 32px;
+  height: 20px;
+  background: var(--accent-color);
+  clip-path: polygon(20% 0, 100% 0, 80% 100%, 0% 100%);
+  border-radius: 0;
+  box-shadow: none;
+  /* clipped */
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  margin-top: 0;
+  /* Reset margin */
+}
+
+html[data-theme="mech_green"] .list-item.focused .slider-thumb,
+html[data-theme="mech_gold"] .list-item.focused .slider-thumb,
+html[data-theme="mech_purple"] .list-item.focused .slider-thumb,
+html[data-theme="mech_blue"] .list-item.focused .slider-thumb,
+html[data-theme="mech_white"] .list-item.focused .slider-thumb,
+html[data-theme="mech_red"] .list-item.focused .slider-thumb {
+  background: var(--accent-color);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Thumb Decoration */
+html[data-theme="mech_green"] .slider-thumb::after,
+html[data-theme="mech_gold"] .slider-thumb::after,
+html[data-theme="mech_purple"] .slider-thumb::after,
+html[data-theme="mech_blue"] .slider-thumb::after,
+html[data-theme="mech_white"] .slider-thumb::after,
+html[data-theme="mech_red"] .slider-thumb::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, -50%) skewX(-20deg);
+}
+
+/* --- Toggle Switch --- */
+html[data-theme="mech_green"] .toggle-switch,
+html[data-theme="mech_gold"] .toggle-switch,
+html[data-theme="mech_purple"] .toggle-switch,
+html[data-theme="mech_blue"] .toggle-switch,
+html[data-theme="mech_white"] .toggle-switch,
+html[data-theme="mech_red"] .toggle-switch {
+  width: 48px;
+  height: 24px;
+  border-radius: 0;
+  background: var(--bg-item);
+  /* slate-900 / stone-900 */
+  border: 1px solid var(--border-color);
+  clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Toggle Ticks Background */
+html[data-theme="mech_green"] .toggle-switch::before,
+html[data-theme="mech_gold"] .toggle-switch::before,
+html[data-theme="mech_purple"] .toggle-switch::before,
+html[data-theme="mech_blue"] .toggle-switch::before,
+html[data-theme="mech_white"] .toggle-switch::before,
+html[data-theme="mech_red"] .toggle-switch::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(90deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.1) 1px,
+      transparent 1px,
+      transparent 8px);
+  opacity: 0.3;
+}
+
+html[data-theme="mech_green"] .toggle-switch.active,
+html[data-theme="mech_gold"] .toggle-switch.active,
+html[data-theme="mech_purple"] .toggle-switch.active,
+html[data-theme="mech_blue"] .toggle-switch.active,
+html[data-theme="mech_white"] .toggle-switch.active,
+html[data-theme="mech_red"] .toggle-switch.active {
+  border-color: var(--accent-color);
+  background: var(--accent-dim);
+}
+
+html[data-theme="mech_green"] .toggle-thumb,
+html[data-theme="mech_gold"] .toggle-thumb,
+html[data-theme="mech_purple"] .toggle-thumb,
+html[data-theme="mech_blue"] .toggle-thumb,
+html[data-theme="mech_white"] .toggle-thumb,
+html[data-theme="mech_red"] .toggle-thumb {
+  width: 50%;
+  height: 100%;
+  border-radius: 0;
+  background: var(--text-muted);
+  /* slate-500 / stone-500 */
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(0) !important;
+  /* Force initial state */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  margin: 0;
+}
+
+html[data-theme="mech_green"] .toggle-switch.active .toggle-thumb,
+html[data-theme="mech_gold"] .toggle-switch.active .toggle-thumb,
+html[data-theme="mech_purple"] .toggle-switch.active .toggle-thumb,
+html[data-theme="mech_blue"] .toggle-switch.active .toggle-thumb,
+html[data-theme="mech_white"] .toggle-switch.active .toggle-thumb,
+html[data-theme="mech_red"] .toggle-switch.active .toggle-thumb {
+  background: var(--accent-color);
+  left: 0;
+  /* Keep left at 0 */
+  transform: translateX(100%) !important;
+  /* Move exactly 100% of width */
+}
+
+/* Toggle Thumb Decoration */
+html[data-theme="mech_green"] .toggle-thumb::after,
+html[data-theme="mech_gold"] .toggle-thumb::after,
+html[data-theme="mech_purple"] .toggle-thumb::after,
+html[data-theme="mech_blue"] .toggle-thumb::after,
+html[data-theme="mech_white"] .toggle-thumb::after,
+html[data-theme="mech_red"] .toggle-thumb::after {
+  content: '';
+  width: 4px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* --- Stepper (MechMultiSelect Style) --- */
+/* Transform stepper-row into a pill-like container */
+html[data-theme="mech_green"] .stepper-row,
+html[data-theme="mech_gold"] .stepper-row,
+html[data-theme="mech_purple"] .stepper-row,
+html[data-theme="mech_blue"] .stepper-row,
+html[data-theme="mech_white"] .stepper-row,
+html[data-theme="mech_red"] .stepper-row {
+  background: rgba(0, 0, 0, 0.5);
+  /* black bg */
+  border: 1px solid var(--text-muted);
+  /* slate-500 / stone-500 */
+  padding: 2px;
+  gap: 2px;
+  height: auto;
+  /* let it grow */
+  border-radius: 0;
+}
+
+html[data-theme="mech_green"] .list-item.focused .stepper-row,
+html[data-theme="mech_gold"] .list-item.focused .stepper-row,
+html[data-theme="mech_purple"] .list-item.focused .stepper-row,
+html[data-theme="mech_blue"] .list-item.focused .stepper-row,
+html[data-theme="mech_white"] .list-item.focused .stepper-row,
+html[data-theme="mech_red"] .list-item.focused .stepper-row {
+  border-color: var(--accent-glow);
+}
+
+/* Stepper Item (Option) */
+html[data-theme="mech_green"] .stepper-item,
+html[data-theme="mech_gold"] .stepper-item,
+html[data-theme="mech_purple"] .stepper-item,
+html[data-theme="mech_blue"] .stepper-item,
+html[data-theme="mech_white"] .stepper-item,
+html[data-theme="mech_red"] .stepper-item {
+  border-radius: 0;
+  background: transparent;
+  padding: 4px 8px;
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  /* prevent layout shift */
+}
+
+html[data-theme="mech_green"] .stepper-item:hover,
+html[data-theme="mech_gold"] .stepper-item:hover,
+html[data-theme="mech_purple"] .stepper-item:hover,
+html[data-theme="mech_blue"] .stepper-item:hover,
+html[data-theme="mech_white"] .stepper-item:hover,
+html[data-theme="mech_red"] .stepper-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Active State */
+html[data-theme="mech_green"] .stepper-item.active,
+html[data-theme="mech_gold"] .stepper-item.active,
+html[data-theme="mech_purple"] .stepper-item.active,
+html[data-theme="mech_blue"] .stepper-item.active,
+html[data-theme="mech_white"] .stepper-item.active,
+html[data-theme="mech_red"] .stepper-item.active {
+  background: var(--accent-color);
+  color: black;
+  /* text black on active */
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* Hide the dot */
+html[data-theme="mech_green"] .stepper-dot,
+html[data-theme="mech_gold"] .stepper-dot,
+html[data-theme="mech_purple"] .stepper-dot,
+html[data-theme="mech_blue"] .stepper-dot,
+html[data-theme="mech_white"] .stepper-dot,
+html[data-theme="mech_red"] .stepper-dot {
+  display: none !important;
+}
+
+/* Label Styling */
+html[data-theme="mech_green"] .stepper-label,
+html[data-theme="mech_gold"] .stepper-label,
+html[data-theme="mech_purple"] .stepper-label,
+html[data-theme="mech_blue"] .stepper-label,
+html[data-theme="mech_white"] .stepper-label,
+html[data-theme="mech_red"] .stepper-label {
+  font-family: 'Consolas', monospace;
+  font-size: calc(11px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-muted);
+}
+
+html[data-theme="mech_green"] .stepper-item:hover .stepper-label,
+html[data-theme="mech_gold"] .stepper-item:hover .stepper-label,
+html[data-theme="mech_purple"] .stepper-item:hover .stepper-label,
+html[data-theme="mech_blue"] .stepper-item:hover .stepper-label,
+html[data-theme="mech_white"] .stepper-item:hover .stepper-label,
+html[data-theme="mech_red"] .stepper-item:hover .stepper-label {
+  color: var(--text-secondary);
+}
+
+html[data-theme="mech_green"] .stepper-item.active .stepper-label,
+html[data-theme="mech_gold"] .stepper-item.active .stepper-label,
+html[data-theme="mech_purple"] .stepper-item.active .stepper-label,
+html[data-theme="mech_blue"] .stepper-item.active .stepper-label,
+html[data-theme="mech_white"] .stepper-item.active .stepper-label,
+html[data-theme="mech_red"] .stepper-item.active .stepper-label {
+  color: black;
+  /* text black on active */
+  transform: none;
+  /* remove scale */
+}
+
+html[data-theme="mech_green"] .list-item.focused .stepper-item.active .stepper-label,
+html[data-theme="mech_gold"] .list-item.focused .stepper-item.active .stepper-label,
+html[data-theme="mech_purple"] .list-item.focused .stepper-item.active .stepper-label,
+html[data-theme="mech_blue"] .list-item.focused .stepper-item.active .stepper-label,
+html[data-theme="mech_white"] .list-item.focused .stepper-item.active .stepper-label,
+html[data-theme="mech_red"] .list-item.focused .stepper-item.active .stepper-label {
+  color: black;
+}
+
+/* --- Arrow Selector (MechArrowSelector Style) --- */
+html[data-theme="mech_green"] .arrow-stepper,
+html[data-theme="mech_gold"] .arrow-stepper,
+html[data-theme="mech_purple"] .arrow-stepper,
+html[data-theme="mech_blue"] .arrow-stepper,
+html[data-theme="mech_white"] .arrow-stepper,
+html[data-theme="mech_red"] .arrow-stepper {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--text-muted);
+  /* slate-500 / stone-500 */
+  padding: 4px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  border-radius: 0;
+}
+
+/* Decorative Scanline */
+html[data-theme="mech_green"] .arrow-stepper::before,
+html[data-theme="mech_gold"] .arrow-stepper::before,
+html[data-theme="mech_purple"] .arrow-stepper::before,
+html[data-theme="mech_blue"] .arrow-stepper::before,
+html[data-theme="mech_white"] .arrow-stepper::before,
+html[data-theme="mech_red"] .arrow-stepper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  background: var(--accent-subtle);
+  transform: skewX(12deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+html[data-theme="mech_green"] .arrow-stepper-btn,
+html[data-theme="mech_gold"] .arrow-stepper-btn,
+html[data-theme="mech_purple"] .arrow-stepper-btn,
+html[data-theme="mech_blue"] .arrow-stepper-btn,
+html[data-theme="mech_white"] .arrow-stepper-btn,
+html[data-theme="mech_red"] .arrow-stepper-btn {
+  background: transparent;
+  border: none;
+  clip-path: none;
+  height: 100%;
+  width: 40px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  z-index: 1;
+}
+
+html[data-theme="mech_green"] .arrow-stepper-btn:hover,
+html[data-theme="mech_gold"] .arrow-stepper-btn:hover,
+html[data-theme="mech_purple"] .arrow-stepper-btn:hover,
+html[data-theme="mech_blue"] .arrow-stepper-btn:hover,
+html[data-theme="mech_white"] .arrow-stepper-btn:hover,
+html[data-theme="mech_red"] .arrow-stepper-btn:hover {
+  background: transparent;
+  color: var(--accent-color);
+}
+
+html[data-theme="mech_green"] .list-item.focused .arrow-stepper-btn,
+html[data-theme="mech_gold"] .list-item.focused .arrow-stepper-btn,
+html[data-theme="mech_purple"] .list-item.focused .arrow-stepper-btn,
+html[data-theme="mech_blue"] .list-item.focused .arrow-stepper-btn,
+html[data-theme="mech_white"] .list-item.focused .arrow-stepper-btn,
+html[data-theme="mech_red"] .list-item.focused .arrow-stepper-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent-color);
+}
+
+html[data-theme="mech_green"] .arrow-stepper-value,
+html[data-theme="mech_gold"] .arrow-stepper-value,
+html[data-theme="mech_purple"] .arrow-stepper-value,
+html[data-theme="mech_blue"] .arrow-stepper-value,
+html[data-theme="mech_white"] .arrow-stepper-value,
+html[data-theme="mech_red"] .arrow-stepper-value {
+  flex: 1;
+  text-align: center;
+  font-family: 'Consolas', monospace;
+  font-weight: bold;
+  font-size: calc(14px * var(--font-scale, 1));
+  color: var(--text-highlight);
+  z-index: 1;
+}
+
+/* Apply Clip Path to other containers */
+html[data-theme="mech_green"] .status-overview,
+html[data-theme="mech_green"] .perf-monitor-grid,
+html[data-theme="mech_green"] .listening-panel,
+html[data-theme="mech_green"] .progress-panel,
+html[data-theme="mech_green"] .gamepad-data-grid,
+html[data-theme="mech_green"] .guide-section,
+html[data-theme="mech_green"] .info-banner,
+html[data-theme="mech_green"] .warning-banner,
+html[data-theme="mech_green"] .test-banner,
+html[data-theme="mech_gold"] .status-overview,
+html[data-theme="mech_gold"] .perf-monitor-grid,
+html[data-theme="mech_gold"] .listening-panel,
+html[data-theme="mech_gold"] .progress-panel,
+html[data-theme="mech_gold"] .gamepad-data-grid,
+html[data-theme="mech_gold"] .guide-section,
+html[data-theme="mech_gold"] .info-banner,
+html[data-theme="mech_gold"] .warning-banner,
+html[data-theme="mech_gold"] .test-banner,
+html[data-theme="mech_purple"] .status-overview,
+html[data-theme="mech_blue"] .status-overview,
+html[data-theme="mech_white"] .status-overview,
+html[data-theme="mech_red"] .status-overview,
+html[data-theme="mech_purple"] .perf-monitor-grid,
+html[data-theme="mech_blue"] .perf-monitor-grid,
+html[data-theme="mech_white"] .perf-monitor-grid,
+html[data-theme="mech_red"] .perf-monitor-grid,
+html[data-theme="mech_purple"] .listening-panel,
+html[data-theme="mech_blue"] .listening-panel,
+html[data-theme="mech_white"] .listening-panel,
+html[data-theme="mech_red"] .listening-panel,
+html[data-theme="mech_purple"] .progress-panel,
+html[data-theme="mech_blue"] .progress-panel,
+html[data-theme="mech_white"] .progress-panel,
+html[data-theme="mech_red"] .progress-panel,
+html[data-theme="mech_purple"] .gamepad-data-grid,
+html[data-theme="mech_blue"] .gamepad-data-grid,
+html[data-theme="mech_white"] .gamepad-data-grid,
+html[data-theme="mech_red"] .gamepad-data-grid,
+html[data-theme="mech_purple"] .guide-section,
+html[data-theme="mech_blue"] .guide-section,
+html[data-theme="mech_white"] .guide-section,
+html[data-theme="mech_red"] .guide-section,
+html[data-theme="mech_purple"] .info-banner,
+html[data-theme="mech_blue"] .info-banner,
+html[data-theme="mech_white"] .info-banner,
+html[data-theme="mech_red"] .info-banner,
+html[data-theme="mech_purple"] .warning-banner,
+html[data-theme="mech_blue"] .warning-banner,
+html[data-theme="mech_white"] .warning-banner,
+html[data-theme="mech_red"] .warning-banner,
+html[data-theme="mech_purple"] .test-banner,
+html[data-theme="mech_blue"] .test-banner,
+html[data-theme="mech_white"] .test-banner,
+html[data-theme="mech_red"] .test-banner {
+  clip-path: var(--mech-clip);
+  border-radius: 0;
+  border: 1px solid var(--border-color);
+}
+
+/* Scrollbar */
+html[data-theme="mech_green"] ::-webkit-scrollbar-track,
+html[data-theme="mech_gold"] ::-webkit-scrollbar-track,
+html[data-theme="mech_purple"] ::-webkit-scrollbar-track,
+html[data-theme="mech_blue"] ::-webkit-scrollbar-track,
+html[data-theme="mech_white"] ::-webkit-scrollbar-track,
+html[data-theme="mech_red"] ::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 0;
+}
+
+html[data-theme="mech_green"] ::-webkit-scrollbar-thumb,
+html[data-theme="mech_gold"] ::-webkit-scrollbar-thumb,
+html[data-theme="mech_purple"] ::-webkit-scrollbar-thumb,
+html[data-theme="mech_blue"] ::-webkit-scrollbar-thumb,
+html[data-theme="mech_white"] ::-webkit-scrollbar-thumb,
+html[data-theme="mech_red"] ::-webkit-scrollbar-thumb {
+  background: var(--accent-glow);
+  border-radius: 0;
+}
+
+html[data-theme="mech_green"] ::-webkit-scrollbar-thumb:hover,
+html[data-theme="mech_gold"] ::-webkit-scrollbar-thumb:hover,
+html[data-theme="mech_purple"] ::-webkit-scrollbar-thumb:hover,
+html[data-theme="mech_blue"] ::-webkit-scrollbar-thumb:hover,
+html[data-theme="mech_white"] ::-webkit-scrollbar-thumb:hover,
+html[data-theme="mech_red"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-glow-strong);
+}
+
+/* 游戏库下拉菜单样式 */
+.game-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.game-menu-popup {
+  background: rgba(30, 35, 41, 0.98);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  min-width: 280px;
+  max-width: 320px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+.game-menu-header {
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.game-menu-title {
+  font-size: calc(13px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-primary);
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.game-menu-items {
+  padding: 8px;
+}
+
+.game-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-secondary);
+  font-size: calc(12px * var(--font-scale, 1));
+}
+
+.game-menu-item:hover {
+  background: rgba(102, 192, 244, 0.1);
+  color: var(--text-primary);
+}
+
+.game-menu-item.focused {
+  background: var(--accent-color);
+  color: white;
+}
+
+.game-menu-item.focused svg {
+  stroke: white;
+}
+
+.game-menu-item svg {
+  flex-shrink: 0;
+  stroke: var(--text-muted);
+  transition: stroke 0.15s;
+}
+
+.game-menu-item span {
+  flex: 1;
+}
+
+.game-menu-item .menu-hint {
+  font-size: calc(10px * var(--font-scale, 1));
+  opacity: 0.8;
+  margin-left: auto;
+}
+
+.game-menu-footer {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--border-color);
+}
+
+.menu-hint-key {
+  font-size: calc(10px * var(--font-scale, 1));
+  color: var(--text-muted);
+}
+
+/* 浅色主题 - 游戏菜单样式覆盖 */
+[data-theme="light"] .game-menu-popup,
+[data-theme="cream"] .game-menu-popup,
+[data-theme="lavender"] .game-menu-popup,
+[data-theme="mint"] .game-menu-popup,
+[data-theme="sky"] .game-menu-popup,
+[data-theme="rose"] .game-menu-popup {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .game-menu-header,
+[data-theme="cream"] .game-menu-header,
+[data-theme="lavender"] .game-menu-header,
+[data-theme="mint"] .game-menu-header,
+[data-theme="sky"] .game-menu-header,
+[data-theme="rose"] .game-menu-header {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .game-menu-footer,
+[data-theme="cream"] .game-menu-footer,
+[data-theme="lavender"] .game-menu-footer,
+[data-theme="mint"] .game-menu-footer,
+[data-theme="sky"] .game-menu-footer,
+[data-theme="rose"] .game-menu-footer {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* 赛博金主题 - 游戏菜单样式覆盖 */
+[data-theme="mech_gold"] .game-menu-popup {
+  background: rgba(28, 25, 23, 0.98);
+  border-color: rgba(251, 191, 36, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(251, 191, 36, 0.15);
+}
+
+[data-theme="mech_gold"] .game-menu-header {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.2);
+}
+
+[data-theme="mech_gold"] .game-menu-footer {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.2);
+}
+
+[data-theme="mech_gold"] .game-menu-item:hover {
+  background: rgba(251, 191, 36, 0.15);
+}
+
+[data-theme="mech_gold"] .game-menu-item.focused {
+  background: #fbbf24;
+  color: #0c0a09;
+}
+
+[data-theme="mech_gold"] .game-menu-item.focused svg {
+  stroke: #0c0a09;
+}
+
+/* 机甲翠主题 - 游戏菜单样式覆盖 */
+[data-theme="mech_green"] .game-menu-popup {
+  background: rgba(10, 24, 18, 0.98);
+  border-color: rgba(52, 211, 153, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(52, 211, 153, 0.15);
+}
+
+[data-theme="mech_green"] .game-menu-header {
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.2);
+}
+
+[data-theme="mech_green"] .game-menu-footer {
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.2);
+}
+
+[data-theme="mech_green"] .game-menu-item:hover {
+  background: rgba(52, 211, 153, 0.15);
+}
+
+[data-theme="mech_green"] .game-menu-item.focused {
+  background: #34d399;
+  color: #0a1812;
+}
+
+[data-theme="mech_green"] .game-menu-item.focused svg {
+  stroke: #0a1812;
+}
+
+/* 赛博紫主题 - 游戏菜单样式覆盖 */
+[data-theme="mech_purple"] .game-menu-popup,
+[data-theme="mech_blue"] .game-menu-popup,
+[data-theme="mech_white"] .game-menu-popup {
+  background: rgba(15, 10, 26, 0.98);
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(167, 139, 250, 0.15);
+}
+
+[data-theme="mech_purple"] .game-menu-header,
+[data-theme="mech_blue"] .game-menu-header,
+[data-theme="mech_white"] .game-menu-header {
+  background: rgba(167, 139, 250, 0.1);
+  border-color: rgba(167, 139, 250, 0.2);
+}
+
+[data-theme="mech_purple"] .game-menu-footer,
+[data-theme="mech_blue"] .game-menu-footer,
+[data-theme="mech_white"] .game-menu-footer {
+  background: rgba(167, 139, 250, 0.1);
+  border-color: rgba(167, 139, 250, 0.2);
+}
+
+[data-theme="mech_purple"] .game-menu-item:hover,
+[data-theme="mech_blue"] .game-menu-item:hover,
+[data-theme="mech_white"] .game-menu-item:hover {
+  background: rgba(167, 139, 250, 0.15);
+}
+
+[data-theme="mech_purple"] .game-menu-item.focused,
+[data-theme="mech_blue"] .game-menu-item.focused,
+[data-theme="mech_white"] .game-menu-item.focused {
+  background: #a78bfa;
+  color: #0f0a1a;
+}
+
+[data-theme="mech_purple"] .game-menu-item.focused svg,
+[data-theme="mech_blue"] .game-menu-item.focused svg,
+[data-theme="mech_white"] .game-menu-item.focused svg {
+  stroke: #0f0a1a;
+}
+
+/* ========================================= */
+/* ====== 故障主题 (Glitch Series) UI ====== */
+/* ========================================= */
+
+/* ------ 基础变量 ------ */
+[data-theme="glitch_red"] {
+  --bg-gradient-start: #000000;
+  --bg-gradient-end: #0f0000;
+  --bg-item: rgba(10, 0, 0, 0.6);
+  --bg-item-focus: rgba(30, 0, 0, 0.8);
+
+  --text-primary: #e5e7eb;
+  /* gray-200 */
+  --text-secondary: #9ca3af;
+  /* gray-400 */
+  --text-muted: #6b7280;
+  /* gray-500 */
+
+  --border-color: rgba(255, 0, 60, 0.3);
+  --accent-color: #ff003c;
+  --accent-glow: rgba(255, 0, 60, 0.5);
+  --accent-glow-strong: rgba(255, 0, 60, 0.9);
+  --shadow-focus: 0 0 15px rgba(255, 0, 60, 0.4);
+
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+
+  /* Font: Retro Terminal but readable */
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+/* ------ 列表项 (List Item) ------ */
+/* 故障风列表项：左侧粗边框 + 错位效果 */
+html[data-theme="glitch_red"] .list-item,
+html[data-theme="glitch_red"] .game-card,
+html[data-theme="glitch_cyan"] .list-item,
+html[data-theme="glitch_cyan"] .game-card,
+html[data-theme="glitch_purple"] .list-item,
+html[data-theme="glitch_purple"] .game-card,
+html[data-theme="glitch_green"] .list-item,
+html[data-theme="glitch_green"] .game-card {
+  background: var(--bg-item);
+  border: 1px solid var(--border-color);
+  border-left-width: 4px;
+  /* Default thick left */
+  border-radius: 0 !important;
+  position: relative;
+  transition: all 0.05s linear;
+  /* Fast glitchy transition */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+html[data-theme="glitch_red"] .list-item::after,
+html[data-theme="glitch_red"] .game-card::after,
+html[data-theme="glitch_cyan"] .list-item::after,
+html[data-theme="glitch_cyan"] .game-card::after,
+html[data-theme="glitch_purple"] .list-item::after,
+html[data-theme="glitch_purple"] .game-card::after,
+html[data-theme="glitch_green"] .list-item::after,
+html[data-theme="glitch_green"] .game-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(transparent 0px,
+      transparent 2px,
+      rgba(255, 0, 60, 0.03) 3px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Focused State */
+html[data-theme="glitch_red"] .list-item.focused,
+html[data-theme="glitch_red"] .game-card.focused,
+html[data-theme="glitch_cyan"] .list-item.focused,
+html[data-theme="glitch_cyan"] .game-card.focused,
+html[data-theme="glitch_purple"] .list-item.focused,
+html[data-theme="glitch_purple"] .game-card.focused,
+html[data-theme="glitch_green"] .list-item.focused,
+html[data-theme="glitch_green"] .game-card.focused {
+  background: var(--bg-item-focus) !important;
+  border-left: 8px solid var(--accent-color);
+  /* Thicker accent border */
+  border-right: 1px solid var(--accent-color);
+  border-top: 1px solid var(--accent-color);
+  border-bottom: 1px solid var(--accent-color);
+  transform: translateX(4px);
+  /* Shift right */
+  box-shadow: 4px 4px 0 rgba(255, 0, 60, 0.2);
+  /* Hard shadow */
+  z-index: 10;
+}
+
+/* Focused Glitch Effect (Pseudo-elements) */
+html[data-theme="glitch_red"] .list-item.focused::before,
+html[data-theme="glitch_red"] .game-card.focused::before,
+html[data-theme="glitch_cyan"] .list-item.focused::before,
+html[data-theme="glitch_cyan"] .game-card.focused::before,
+html[data-theme="glitch_purple"] .list-item.focused::before,
+html[data-theme="glitch_purple"] .game-card.focused::before,
+html[data-theme="glitch_green"] .list-item.focused::before,
+html[data-theme="glitch_green"] .game-card.focused::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1px dashed var(--accent-color);
+  z-index: 11;
+  animation: none;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ------ 标题样式 ------ */
+html[data-theme="glitch_red"] .item-title,
+html[data-theme="glitch_red"] .section-title,
+html[data-theme="glitch_cyan"] .item-title,
+html[data-theme="glitch_cyan"] .section-title,
+html[data-theme="glitch_purple"] .item-title,
+html[data-theme="glitch_purple"] .section-title,
+html[data-theme="glitch_green"] .item-title,
+html[data-theme="glitch_green"] .section-title {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  /* Improved readability */
+  font-weight: bold;
+  /* Improved legibility */
+}
+
+html[data-theme="glitch_red"] .list-item.focused .item-title,
+html[data-theme="glitch_cyan"] .list-item.focused .item-title,
+html[data-theme="glitch_purple"] .list-item.focused .item-title,
+html[data-theme="glitch_green"] .list-item.focused .item-title {
+  color: var(--accent-color);
+  text-shadow: 1px 0 0 rgba(0, 255, 255, 0.4), -1px 0 0 rgba(255, 0, 60, 0.4);
+  /* Subtler glitch */
+}
+
+/* ------ 开关 (Toggle Switch) ------ */
+/* 矩形开关，滑块是矩形块 */
+html[data-theme="glitch_red"] .toggle-switch,
+html[data-theme="glitch_cyan"] .toggle-switch,
+html[data-theme="glitch_purple"] .toggle-switch,
+html[data-theme="glitch_green"] .toggle-switch {
+  width: 44px;
+  height: 22px;
+  border-radius: 0;
+  background: transparent;
+  border: 2px solid var(--text-muted);
+  position: relative;
+  overflow: visible;
+}
+
+html[data-theme="glitch_red"] .toggle-switch.active,
+html[data-theme="glitch_cyan"] .toggle-switch.active,
+html[data-theme="glitch_purple"] .toggle-switch.active,
+html[data-theme="glitch_green"] .toggle-switch.active {
+  border-color: var(--accent-color);
+  background: var(--bg-item-focus);
+}
+
+html[data-theme="glitch_red"] .toggle-thumb,
+html[data-theme="glitch_cyan"] .toggle-thumb,
+html[data-theme="glitch_purple"] .toggle-thumb,
+html[data-theme="glitch_green"] .toggle-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 0;
+  background: var(--text-muted);
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%) !important;
+  transition: none;
+  /* Instant switching */
+  box-shadow: none;
+}
+
+html[data-theme="glitch_red"] .toggle-switch.active .toggle-thumb,
+html[data-theme="glitch_cyan"] .toggle-switch.active .toggle-thumb,
+html[data-theme="glitch_purple"] .toggle-switch.active .toggle-thumb,
+html[data-theme="glitch_green"] .toggle-switch.active .toggle-thumb {
+  background: var(--accent-color);
+  left: auto;
+  /* Remove left */
+  right: 4px;
+  /* Attach to right */
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* ------ 滑动条 (Slider) ------ */
+/* 虚线轨道 + 矩形滑块 */
+html[data-theme="glitch_red"] .slider-track,
+html[data-theme="glitch_cyan"] .slider-track,
+html[data-theme="glitch_purple"] .slider-track,
+html[data-theme="glitch_green"] .slider-track {
+  height: 24px;
+  background: transparent;
+  border-radius: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Track Line (Dashed) */
+html[data-theme="glitch_red"] .slider-track::before,
+html[data-theme="glitch_cyan"] .slider-track::before,
+html[data-theme="glitch_purple"] .slider-track::before,
+html[data-theme="glitch_green"] .slider-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: repeating-linear-gradient(90deg,
+      var(--text-muted),
+      var(--text-muted) 4px,
+      transparent 4px,
+      transparent 8px);
+  opacity: 0.5;
+}
+
+html[data-theme="glitch_red"] .slider-fill,
+html[data-theme="glitch_cyan"] .slider-fill,
+html[data-theme="glitch_purple"] .slider-fill,
+html[data-theme="glitch_green"] .slider-fill {
+  height: 4px;
+  background: var(--accent-color);
+  border-radius: 0;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px var(--accent-glow);
+  z-index: 1;
+}
+
+html[data-theme="glitch_red"] .slider-thumb,
+html[data-theme="glitch_cyan"] .slider-thumb,
+html[data-theme="glitch_purple"] .slider-thumb,
+html[data-theme="glitch_green"] .slider-thumb {
+  width: 12px;
+  height: 20px;
+  background: #000;
+  border: 2px solid var(--accent-color);
+  border-radius: 0;
+  box-shadow: 0 0 5px var(--accent-glow);
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  margin-top: 0;
+}
+
+/* ------ Stepper (Segmented Control) ------ */
+html[data-theme="glitch_red"] .stepper-row,
+html[data-theme="glitch_cyan"] .stepper-row,
+html[data-theme="glitch_purple"] .stepper-row,
+html[data-theme="glitch_green"] .stepper-row {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  gap: 0;
+  height: auto;
+}
+
+html[data-theme="glitch_red"] .stepper-item,
+html[data-theme="glitch_cyan"] .stepper-item,
+html[data-theme="glitch_purple"] .stepper-item,
+html[data-theme="glitch_green"] .stepper-item {
+  border-right: 1px solid var(--border-color);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-primary);
+  /* Brighter unselected text */
+}
+
+html[data-theme="glitch_red"] .stepper-item:last-child,
+html[data-theme="glitch_cyan"] .stepper-item:last-child,
+html[data-theme="glitch_purple"] .stepper-item:last-child,
+html[data-theme="glitch_green"] .stepper-item:last-child {
+  border-right: none;
+}
+
+html[data-theme="glitch_red"] .stepper-item.active,
+html[data-theme="glitch_cyan"] .stepper-item.active,
+html[data-theme="glitch_purple"] .stepper-item.active,
+html[data-theme="glitch_green"] .stepper-item.active {
+  background: var(--accent-color);
+  color: #ffffff;
+  /* White text on Red bg for contrast */
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  /* Shadow for legibility */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  /* Depth */
+}
+
+/* ------ Arrow Stepper ------ */
+html[data-theme="glitch_red"] .arrow-stepper,
+html[data-theme="glitch_cyan"] .arrow-stepper,
+html[data-theme="glitch_purple"] .arrow-stepper,
+html[data-theme="glitch_green"] .arrow-stepper {
+  border: 1px solid var(--text-muted);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+/* Glitch decorations */
+html[data-theme="glitch_red"] .arrow-stepper::after,
+html[data-theme="glitch_cyan"] .arrow-stepper::after,
+html[data-theme="glitch_purple"] .arrow-stepper::after,
+html[data-theme="glitch_green"] .arrow-stepper::after {
+  content: '<<< >>>';
+  position: absolute;
+  right: 5px;
+  bottom: 2px;
+  font-size: 8px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  font-family: monospace;
+}
+
+html[data-theme="glitch_red"] .arrow-stepper-btn,
+html[data-theme="glitch_cyan"] .arrow-stepper-btn,
+html[data-theme="glitch_purple"] .arrow-stepper-btn,
+html[data-theme="glitch_green"] .arrow-stepper-btn {
+  color: var(--text-primary);
+  border-radius: 0;
+}
+
+html[data-theme="glitch_red"] .arrow-stepper-btn:hover,
+html[data-theme="glitch_cyan"] .arrow-stepper-btn:hover,
+html[data-theme="glitch_purple"] .arrow-stepper-btn:hover,
+html[data-theme="glitch_green"] .arrow-stepper-btn:hover {
+  background: var(--accent-dim);
+  color: var(--accent-color);
+}
+
+html[data-theme="glitch_red"] .arrow-stepper-value,
+html[data-theme="glitch_cyan"] .arrow-stepper-value,
+html[data-theme="glitch_purple"] .arrow-stepper-value,
+html[data-theme="glitch_green"] .arrow-stepper-value {
+  font-family: 'Consolas', monospace;
+  font-weight: bold;
+}
+
+/* ------ 横向选项列表可读性增强 ------ */
+/* 未选中项的文字颜色提亮 */
+html[data-theme="glitch_red"] .stepper-label,
+html[data-theme="glitch_cyan"] .stepper-label,
+html[data-theme="glitch_purple"] .stepper-label,
+html[data-theme="glitch_green"] .stepper-label {
+  font-family: 'Consolas', monospace;
+  font-size: calc(11px * var(--font-scale, 1));
+  font-weight: bold;
+  color: var(--text-secondary);
+  /* 比 text-muted 更亮 */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 选中项的文字样式 */
+html[data-theme="glitch_red"] .stepper-item.active .stepper-label,
+html[data-theme="glitch_cyan"] .stepper-item.active .stepper-label,
+html[data-theme="glitch_purple"] .stepper-item.active .stepper-label,
+html[data-theme="glitch_green"] .stepper-item.active .stepper-label {
+  color: #ffffff;
+  /* 白色确保对比度 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  transform: none;
+  /* 移除缩放，保持一致 */
+}
+
+/* 聚焦状态下选中项 */
+html[data-theme="glitch_red"] .list-item.focused .stepper-item.active .stepper-label,
+html[data-theme="glitch_cyan"] .list-item.focused .stepper-item.active .stepper-label,
+html[data-theme="glitch_purple"] .list-item.focused .stepper-item.active .stepper-label,
+html[data-theme="glitch_green"] .list-item.focused .stepper-item.active .stepper-label {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+/* 隐藏圆点指示器，故障风格不需要 */
+html[data-theme="glitch_red"] .stepper-dot,
+html[data-theme="glitch_cyan"] .stepper-dot,
+html[data-theme="glitch_purple"] .stepper-dot,
+html[data-theme="glitch_green"] .stepper-dot {
+  display: none;
+}
+
+/* 悬停状态增强 */
+html[data-theme="glitch_red"] .stepper-item:hover .stepper-label,
+html[data-theme="glitch_cyan"] .stepper-item:hover .stepper-label,
+html[data-theme="glitch_purple"] .stepper-item:hover .stepper-label,
+html[data-theme="glitch_green"] .stepper-item:hover .stepper-label {
+  color: var(--text-primary);
+}
+
+/* ------ 基础变量: 故障青 ------ */
+[data-theme="glitch_cyan"] {
+  --bg-gradient-start: #000000;
+  --bg-gradient-end: #000f0f;
+  --bg-item: rgba(0, 10, 10, 0.6);
+  --bg-item-focus: rgba(0, 30, 30, 0.8);
+
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --border-color: rgba(0, 255, 255, 0.3);
+  --accent-color: #00ffff;
+  --accent-glow: rgba(0, 255, 255, 0.5);
+  --accent-glow-strong: rgba(0, 255, 255, 0.9);
+  --shadow-focus: 0 0 15px rgba(0, 255, 255, 0.4);
+
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+/* ------ 基础变量: 故障紫 ------ */
+[data-theme="glitch_purple"] {
+  --bg-gradient-start: #000000;
+  --bg-gradient-end: #0a000f;
+  --bg-item: rgba(10, 0, 15, 0.6);
+  --bg-item-focus: rgba(20, 0, 30, 0.8);
+
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --border-color: rgba(191, 0, 255, 0.3);
+  --accent-color: #bf00ff;
+  --accent-glow: rgba(191, 0, 255, 0.5);
+  --accent-glow-strong: rgba(191, 0, 255, 0.9);
+  --shadow-focus: 0 0 15px rgba(191, 0, 255, 0.4);
+
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+/* ------ 基础变量: 故障绿 ------ */
+[data-theme="glitch_green"] {
+  --bg-gradient-start: #000000;
+  --bg-gradient-end: #000f00;
+  --bg-item: rgba(0, 10, 0, 0.6);
+  --bg-item-focus: rgba(0, 30, 0, 0.8);
+
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --border-color: rgba(0, 255, 65, 0.3);
+  --accent-color: #00ff41;
+  --accent-glow: rgba(0, 255, 65, 0.5);
+  --accent-glow-strong: rgba(0, 255, 65, 0.9);
+  --shadow-focus: 0 0 15px rgba(0, 255, 65, 0.4);
+
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-full: 0px;
+
+  font-family: 'Consolas', 'Courier New', monospace;
+}
