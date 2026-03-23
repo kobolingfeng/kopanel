@@ -29,7 +29,7 @@
 
     /* Lang */
     .lang-switch{position:fixed;top:24px;right:28px;z-index:100;display:flex;gap:1px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;background:rgba(8,8,8,0.85);backdrop-filter:blur(8px)}
-    .lang-btn{padding:5px 12px;font:500 11px/1 var(--mono);letter-spacing:0.06em;color:var(--fg-dim);background:transparent;border:none;cursor:pointer;transition:all 0.2s}
+    .lang-btn{padding:5px 12px;font:500 13px/1 var(--mono);letter-spacing:0.06em;color:var(--fg-dim);background:transparent;border:none;cursor:pointer;transition:all 0.2s}
     .lang-btn:hover{color:var(--fg)}
     .lang-btn.active{color:var(--bg);background:var(--fg)}
 
@@ -48,8 +48,8 @@
     }
     .hero-title span{background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,0.45) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
     .hero-sub{font-size:clamp(16px,2.2vw,19px);font-weight:400;color:var(--fg-dim);max-width:440px;margin:0 auto 20px;line-height:1.65;opacity:0;animation:fadeIn 0.6s 0.5s var(--ease) forwards}
-    .hero-stats{font-family:var(--mono);font-size:13px;color:var(--fg-faint);letter-spacing:0.04em;opacity:0;transition:opacity 0.6s var(--ease)}
-    .hero-analytics{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;letter-spacing:0.05em;opacity:0;transition:opacity 0.6s var(--ease)}
+    .hero-stats{font-family:var(--mono);font-size:14px;color:var(--fg-faint);letter-spacing:0.04em;opacity:0;transition:opacity 0.6s var(--ease)}
+    .hero-analytics{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--accent);text-decoration:none;letter-spacing:0.05em;opacity:0;transition:opacity 0.6s var(--ease)}
     .hero-analytics:hover{text-decoration:underline}
     .hero-analytics svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
 
@@ -59,18 +59,18 @@
     .cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-bottom:72px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;opacity:0;animation:fadeUp 0.6s 0.7s var(--ease) forwards}
     .card{padding:40px 36px;background:rgba(255,255,255,0.025);text-decoration:none;color:inherit;transition:background 0.25s;position:relative}
     .card:hover{background:rgba(255,255,255,0.045)}
-    .card-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-faint);margin-bottom:14px}
+    .card-label{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-faint);margin-bottom:14px}
     .card-title{font-size:22px;font-weight:700;letter-spacing:-0.03em;margin-bottom:8px}
-    .card-desc{font-size:13px;color:var(--fg-dim);line-height:1.55;margin-bottom:28px}
-    .card-btn{display:inline-block;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:600;letter-spacing:0.02em;background:var(--fg);color:var(--bg);transition:opacity 0.2s}
+    .card-desc{font-size:14px;color:var(--fg-dim);line-height:1.55;margin-bottom:28px}
+    .card-btn{display:inline-block;padding:10px 20px;border-radius:6px;font-size:14px;font-weight:600;letter-spacing:0.02em;background:var(--fg);color:var(--bg);transition:opacity 0.2s}
     .card-btn:hover{opacity:0.85}
     .card-btn.accent{background:var(--accent);color:#111}
-    .card-size{position:absolute;top:40px;right:36px;font-family:var(--mono);font-size:11px;color:var(--fg-faint)}
+    .card-size{position:absolute;top:40px;right:36px;font-family:var(--mono);font-size:13px;color:var(--fg-faint)}
 
     /* Widget */
     .widget-section{margin-bottom:72px;opacity:0;transform:translateY(12px);transition:all 0.6s var(--ease)}
     .widget-section.visible{opacity:1;transform:translateY(0)}
-    .section-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--fg-faint);margin-bottom:24px;text-align:center}
+    .section-label{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--fg-faint);margin-bottom:24px;text-align:center}
     .widget-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden}
 
     /* Features */
@@ -82,15 +82,15 @@
     .feat:hover{background:rgba(255,255,255,0.04)}
     .feat-icon{color:var(--accent);margin-bottom:16px}
     .feat-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
-    .feat-name{font-size:14px;font-weight:600;margin-bottom:5px;letter-spacing:-0.01em}
-    .feat-text{font-size:12.5px;color:var(--fg-dim);line-height:1.55}
+    .feat-name{font-size:15px;font-weight:600;margin-bottom:5px;letter-spacing:-0.01em}
+    .feat-text{font-size:14px;color:var(--fg-dim);line-height:1.55}
 
     /* Footer */
     .footer{border-top:1px solid rgba(255,255,255,0.06);padding:40px 0 56px;text-align:center}
     .footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-bottom:10px}
-    .footer a{color:var(--fg-dim);text-decoration:none;font-size:12px;transition:color 0.2s}
+    .footer a{color:var(--fg-dim);text-decoration:none;font-size:14px;transition:color 0.2s}
     .footer a:hover{color:var(--fg)}
-    .footer-copy{font-family:var(--mono);font-size:10px;color:var(--fg-faint);letter-spacing:0.04em}
+    .footer-copy{font-family:var(--mono);font-size:12px;color:var(--fg-faint);letter-spacing:0.04em}
 
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
