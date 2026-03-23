@@ -2,6 +2,14 @@
 
 KoPanel 是一款专为 GPD 掌机设计的控制面板，提供 TDP 调节、风扇控制、显示设置、手柄映射等丰富功能。
 
+## 📥 下载
+
+**下载主页**：[https://cdn.kobo07.cn/kopanel/index.html](https://cdn.kobo07.cn/kopanel/index.html)
+
+## 💬 交流
+
+**QQ 群**：178193167
+
 ## 📂 项目结构
 
 本仓库包含 KoPanel 的**前端源码**（Svelte + TypeScript + Vite）。
